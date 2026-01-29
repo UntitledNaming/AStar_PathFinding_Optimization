@@ -1,0 +1,9 @@
+﻿  AStar_PathFinding.cpp
+  ProfilerTLS.cpp
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\MemoryPoolTLS.h(6,10): error C1083: 포함 파일을 열 수 없습니다. 'LFStack.h': No such file or directory
+  (소스 파일 'AStar_PathFinding.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\ProfilerTLS.h(392,10): warning C4244: 'return': 'DWORD'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 'ProfilerTLS.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다...
