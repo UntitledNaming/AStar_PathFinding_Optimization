@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <vector>
 #include "resource1.h"
 #include "Map.h"
 #include "MapGenerator.h"
@@ -19,9 +20,8 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITDIALOG:
 	{
-		// lParam으로 전달된 pController를 다이얼로그에 저장하기
+		// lParam으로 전달된 윈도우 객체 핸들을 다이얼로그에 저장하기
 		SetWindowLongPtr(hDlg, DWLP_USER, (LONG_PTR)lParam);
-
 
 		// 콤보 박스 핸들 얻기(다이얼로그가 부모 역할하고 다이얼로그안에 콤보 박스 찾기 위해 매개인자로 콤보 박스 ID전달)
 		HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_MODE);
@@ -41,7 +41,6 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 		                                                                     // 3, 4번째 인자는 윈도우 이동 시킬 좌표인데 우선 0,0으로 선택
 		                                                                     // 윈도우의 크기를 가로 w, 세로 200으로 변경(세로만 키움)
 		                                                                     // SWP_NOMOVE : 윈도우 위치 이동하지 마라 / SWP_NOZORDER : 윈도우 창 순서 바꾸지 마라
-
 		return true;
 	}
 
@@ -53,6 +52,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			// OK 버튼 눌렸을 때 처리
 		case IDOK:
 		{
+			// 콤보 박스에서 값 얻기
 			// 콤보 박스 핸들 얻기
 			HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_MODE);
 
@@ -65,23 +65,44 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 				return true;
 			}
 
-			AppController* pController = (AppController*)GetWindowLongPtr(hDlg, DWLP_USER);
+			// Edit Controller Box에서 값 얻기
+			BOOL ok = false;
+			int w = (int)GetDlgItemInt(hDlg, IDC_EDIT_W, &ok, false);   // 매개인자로 다이얼로그 핸들, EDIT 컨트롤 박스 ID, 변환 성공 여부 얻을 아웃 파라미터, 음수 허용/미허용
+			if (!ok)
+			{
+				MessageBox(hDlg, L"가로 값을 입력하세요", L"Error", MB_OK);
+				return true;
+			}
 
+			int h = (int)GetDlgItemInt(hDlg, IDC_EDIT_H, &ok, false);
+			if (!ok)
+			{
+				MessageBox(hDlg, L"세로 값을 입력하세요", L"Error", MB_OK);
+				return true;
+			}
+
+
+			HWND hwnd = (HWND)GetWindowLongPtr(hDlg, DWLP_USER);
+
+			AppController* pController = (AppController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
 			// 인자 전달할 setting 구조체 초기화
 			AppController::settings set;
 
 			if (sel == 0)
 			{
-				set.s_mode = AppController::RunMode::Manual;
+				set.m_mode = AppController::RunMode::Manual;
 			}
 
 			else if (sel == 1)
 			{
-				set.s_mode = AppController::RunMode::Auto;
+				set.m_mode = AppController::RunMode::Auto;
 			}
 
-			pController->controller_settings(set);
+			set.m_mapHeight = h;
+			set.m_mapWidth = w;
+
+			pController->Init(set, hwnd);
 
 			// 다이얼로그 창 닫기
 			EndDialog(hDlg, IDCANCEL);

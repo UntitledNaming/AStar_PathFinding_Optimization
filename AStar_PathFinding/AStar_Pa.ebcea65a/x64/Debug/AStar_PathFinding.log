@@ -1,1 +1,29 @@
-﻿  AStar_PathFinding.vcxproj -> C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\x64\Debug\AStar_PathFinding.exe
+﻿  AStar_PathFinding.cpp
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\ProfilerTLS.h(392,10): warning C4244: 'return': 'DWORD'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 'AStar_PathFinding.cpp'을(를) 컴파일하는 중)
+  
+  AppController.cpp
+  Map.cpp
+  PathFinder.cpp
+  Renderer.cpp
+  SettingsDialog.cpp
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Map.h(25,7): error C2039: 'vector': 'std'의 멤버가 아닙니다.
+  (소스 파일 'SettingsDialog.cpp'을(를) 컴파일하는 중)
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\stddef.h(23,15):
+      'std' 선언을 참조하십시오.
+  
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Map.h(25,13): error C2143: 구문 오류: ';'이(가) '<' 앞에 없습니다.
+  (소스 파일 'SettingsDialog.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Map.h(25,7): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'SettingsDialog.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Map.h(25,19): error C2039: 'vector': 'std'의 멤버가 아닙니다.
+  (소스 파일 'SettingsDialog.cpp'을(를) 컴파일하는 중)
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt\stddef.h(23,15):
+      'std' 선언을 참조하십시오.
+  
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Map.h(25,42): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'SettingsDialog.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다...

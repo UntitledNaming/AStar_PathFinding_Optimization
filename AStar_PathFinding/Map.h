@@ -2,7 +2,7 @@
 class Map
 {
 public:
-	enum class TileType
+	enum class TileType : CHAR
 	{
 		Empty = 0,
 		Wall,
@@ -12,14 +12,26 @@ public:
 
 	struct st_TilePos
 	{
-		INT s_xpos = -1;
-		INT s_ypos = -1;
+		INT m_xpos = -1;
+		INT m_ypos = -1;
 	}typedef TilePos;
 
 public:
-	Map();
+	Map() = default;
 	~Map();
 
+	void Init(int width, int height);
+
+	// const noexcept : 멤버 변수 값 안바꾸고 예외 던지지 않는것
+	INT GetWidth() const noexcept
+	{
+		return m_width;
+	}
+
+	INT GetHeight() const noexcept
+	{
+		return m_height;
+	}
 
 private:
 	std::vector<std::vector<CHAR>> m_tileMap; // 시작점과 종점

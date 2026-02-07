@@ -12,21 +12,21 @@ public:
 
 	struct settings
 	{
-		RunMode s_mode      = RunMode::Manual;
-		INT     s_mapWidth  = 150;
-		INT     s_mapHeight = 100;
-		INT     s_gridSize  = 10;
+		RunMode m_mode      = RunMode::Manual;
+		INT     m_mapWidth  = 100;             // 그리드가 가로롤 100개
+		INT     m_mapHeight = 50;              // 그리드가 세로로 50개
 	};
 
 public:
 	AppController() = default;
 	~AppController();
 
-	void controller_settings(const settings& src);
+	void Init(const settings& src, HWND hWnd);
+
 
 	// 객체 사용 핸들러 
-	void OnPaint(HWND hWnd, HDC hdc);
-	void OnMouseWheel();
+	void OnPaint(HWND hWnd);
+	void OnMouseWheel(HWND hwnd, int wheelDelta, int mouseX, int mouseY);
 	void OnLButtonDown();
 
 private:

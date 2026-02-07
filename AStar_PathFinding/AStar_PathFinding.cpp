@@ -94,7 +94,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, AppController* pController)
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
    // 윈도우 생성 시 앱 컨트롤러 객체 포인터 저장
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_VSCROLL,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, pController);
 
    if (!hWnd)
@@ -126,7 +126,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // 리소스에 있는 다이얼로그 템플릿 가지고 실제 다이얼로그 만들어서 띄우고 다이얼로그 프로시저 호출될 수 있게 하는 함수
         // 이 함수 안에서 다이얼로그 생성 및 SettingsDlgProc을 호출함. 메세지 루프를 돌리면서 SettingsDlgProc이 메세지 처리하다가
         // EndDialog가 호출되면 메세지 루프가 끝나고 DialogBoxParam이 리턴함.
-        DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hWnd, SettingsDlgProc,(LPARAM)pController);
+        DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hWnd, SettingsDlgProc, (LPARAM)hWnd);
     }
     break;
 
@@ -153,7 +153,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-
+            pController->OnPaint(hWnd);
             EndPaint(hWnd, &ps);
         }
         break;

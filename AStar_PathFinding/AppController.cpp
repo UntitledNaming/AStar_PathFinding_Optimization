@@ -11,9 +11,25 @@ AppController::~AppController()
 
 }
 
-void AppController::controller_settings(const settings& src)
+void AppController::Init(const settings& src, HWND hWnd)
 {
-	m_mode = src.s_mode;
+	m_mode = src.m_mode;
 
+	m_map.Init(src.m_mapWidth, src.m_mapHeight);
+	m_renderer.Init(hWnd);
+}
+
+void AppController::OnPaint(HWND hWnd)
+{
+	m_renderer.Render(hWnd, m_map);
+}
+
+void AppController::OnMouseWheel(HWND hwnd, int wheelDelta, int mouseX, int mouseY)
+{
 
 }
+
+void AppController::OnLButtonDown()
+{
+}
+
