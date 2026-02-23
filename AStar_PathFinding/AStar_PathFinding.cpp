@@ -1,15 +1,15 @@
 ﻿#include <windows.h>
 #include <vector>
+#include <queue>
 #include <windowsx.h>
 #include "resource1.h"
 #include "SettingsDialog.h"
 #include "Map.h"
 #include "MapGenerator.h"
-#include "Renderer.h"
+#include "PriorityQueue.h"
 #include "PathFinder.h"
+#include "Renderer.h"
 #include "AppController.h"
-#include "MemoryPoolTLS.h"
-#include "ProfilerTLS.h"
 #include "framework.h"
 #include "AStar_PathFinding.h"
 
@@ -123,18 +123,65 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pController);
 
-
         // 리소스에 있는 다이얼로그 템플릿 가지고 실제 다이얼로그 만들어서 띄우고 다이얼로그 프로시저 호출될 수 있게 하는 함수
         // 이 함수 안에서 다이얼로그 생성 및 SettingsDlgProc을 호출함. 메세지 루프를 돌리면서 SettingsDlgProc이 메세지 처리하다가
         // EndDialog가 호출되면 메세지 루프가 끝나고 DialogBoxParam이 리턴함.
         DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hWnd, SettingsDlgProc, (LPARAM)hWnd);
+
+        if (pController->GetMode() == AppController::RunMode::Auto)
+        {
+            PostMessage(hWnd, WM_AUTO_PATHFINDING, 0, 0);
+        }
     }
     break;
     
+    case WM_MBUTTONDOWN:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnMButtonDown(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+    }
+    break;
+
+    case WM_MBUTTONUP:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnMButtonUp();
+    }
+    break;
+
+    case WM_KEYDOWN:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnKeyDown(hWnd,wParam);
+    }
+    break;
+
     // lParam : 클라이언트 좌표(윈도우 클라이언트 영역 좌측 상단 0,0 기준)
     case WM_LBUTTONDOWN:
     {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnLButtonDown(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+    }
+    break;
 
+    case WM_LBUTTONUP:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnLButtonUp();
+    }
+    break;
+
+    case WM_RBUTTONDOWN:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnRButtonDown(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+    }
+    break;
+    
+    case WM_MOUSEMOVE:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnMouseMove(hWnd, wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
     }
     break;
 
@@ -181,11 +228,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             pController->OnPaint(hWnd);
             EndPaint(hWnd, &ps);
+
+            if (pController->GetMode() == AppController::RunMode::Auto)
+            {
+                PostMessage(hWnd, WM_AUTO_PATHFINDING, 0, 0);
+            }
+
         }
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+
+    case WM_AUTO_PATHFINDING:
+    {
+        pController = (AppController*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        pController->OnAutoPathFinding(hWnd);
+    }
+    break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

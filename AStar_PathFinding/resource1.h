@@ -12,6 +12,7 @@
 #define IDC_COMBO1                      1004
 #define IDC_EDIT_W                      1010
 #define IDC_EDIT_H                      1011
+#define IDC_EDIT_COUNT                  1012
 #define IDC_EDIT1                       2000
 #define IDC_EDIT2                       2001
 

@@ -134,6 +134,7 @@
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="MemoryPoolTLS.h" />
     <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="ProfilerTLS.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Resource.h" />
@@ -147,7 +148,6 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapGenerator.cpp" />
     <ClCompile Include="PathFinder.cpp" />
-    <ClCompile Include="ProfilerTLS.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
   </ItemGroup>

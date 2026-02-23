@@ -105,8 +105,8 @@ public:
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// 전체 샘플링 데이터 자료구조의 Index를 구하고 TlsIndex에 저장
-	// 
+	// TLS에 객체 저장.
+	// 스레드 시작시 호출해야 함.
 	// Parameters: 없음
 	// Return: 전체 샘플링 데이터 배열에 세팅 가능하면 성공 안되면 실패
 	/////////////////////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ public:
     // Parameters: (char *)출력될 파일 이름.
     // Return: 없음.
     /////////////////////////////////////////////////////////////////////////////
-	void                                ProfileDataOutText(WCHAR* szName)
+	bool                                ProfileDataOutText(WCHAR* szName)
 	{
 		errno_t err;
 		FILE* fp;
@@ -198,17 +198,10 @@ public:
 		// 
 		//=======================================================================================================
 
-
-		const WCHAR* pHeader[3];
-		for (int i = 0; i < 3; i++)
-		{
-			if (i == 1)
-			{
-				pHeader[i] = L"                                     Name |                     Average  |                            Min  |                            Max  |       Call  |\n";
-				continue;
-			}
-			pHeader[i] = L"-------------------------------------------------------------------------------------------------------\n";
-		}
+		const WCHAR* line = L"+------------+------------------------------------------+--------------+--------------+--------------+------------+\n";
+		const WCHAR* header = L"| Thread ID  | Name                                     | Avg (us)     | Min (us)     | Max (us)     | Call       |\n";
+		const WCHAR* row = L"| %10u | %-40s | %12.3f | %12.3f | %12.3f | %10lld |\n";
+		const WCHAR* total = L"| %-10s | %-40s | %12.3f | %12.3f | %12.3f | %10lld |\n";
 
 		//각 스레드 해시 테이블 size 합산
 		size_t totalsize = 0;
@@ -230,35 +223,57 @@ public:
 
 
 		// 계산된 정보를 파일에 저장할 버퍼에 Copy(헤더도 이때 저장)
-		//프로파일러 헤더 및 데이터 저장
-		//MAX_STRING_SIZE : 파일에 저장할 정보들 문자열 저장시 1줄 최대 크기
-		size_t reMain = (MAX_HEADER_SIZE + (MAX_STRING_SIZE) * (totalsize + maxsize + m_ArrayIndex))*sizeof(WCHAR);
-		WCHAR* pDataBuffer = (WCHAR*)malloc(reMain);
+		// 프로파일러 헤더 및 데이터 저장
+		// MAX_STRING_SIZE : 파일에 저장할 정보들 문자열 저장시 1줄 최대 크기
+		size_t reMain = (MAX_HEADER_SIZE + (MAX_STRING_SIZE) * (totalsize + maxsize + m_ArrayIndex)) * sizeof(WCHAR);
+		size_t bufferSize = reMain;
+		WCHAR* pFileBuffer = (WCHAR*)malloc(reMain);
 		WCHAR* pEnd = nullptr;
 		HRESULT ret;
 
-		memset(pDataBuffer, NULL, reMain);
+		memset(pFileBuffer, NULL, reMain);
 
 		// 1. 헤더 저장
-		//3번째 인자 : 문자열 Copy후 문자열 끝 NULL 가리키는 포인터
-		//4번째 인자 : Dest 버퍼에 문자열 Copy후 남은 크기
-		ret = StringCchPrintfExW(pDataBuffer, reMain, &pEnd, &reMain, 0, pHeader[0]);
+		// 3번째 인자 : 문자열 Copy후 문자열 끝 NULL 가리키는 포인터
+		// 4번째 인자 : Dest 버퍼에 문자열 Copy후 남은 크기
+		ret = StringCchPrintfExW(pFileBuffer, reMain, &pEnd, &reMain, 0, line);
 		if (ret != S_OK)
 		{
-			__debugbreak();
+			for (int i = 0; i < m_ArrayIndex; i++)
+				delete[] ptr[i];
+
+			delete[] pTotal;
+
+			free(pFileBuffer);
+
+			return false;
 		}
 
-		for (int i = 1; i < 3; i++)
+		ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, header);
+		if (ret != S_OK)
 		{
-			ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, pHeader[i]);
-			if (ret != S_OK)
-			{
-				__debugbreak();
-			}
+			for (int i = 0; i < m_ArrayIndex; i++)
+				delete[] ptr[i];
 
+			delete[] pTotal;
+
+			free(pFileBuffer);
+
+			return false;
 		}
 
+		ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, line);
+		if (ret != S_OK)
+		{
+			for (int i = 0; i < m_ArrayIndex; i++)
+				delete[] ptr[i];
 
+			delete[] pTotal;
+
+			free(pFileBuffer);
+
+			return false;
+		}
 
 		// 2. 데이터 계산 및 버퍼에 저장
 		size_t tableSize = 0;
@@ -280,16 +295,23 @@ public:
 			for (int j = 0; j < tableSize;j++)
 			{
 				//전체 TotalTick에서 Max, Min 뺀 값을 call 횟수로 나눔
-				maxTime = (((ptr[i][j].s_Max[0] + ptr[i][j].s_Max[1]) / 2) * (double)1000000 / freq.QuadPart);
-				minTime = (((ptr[i][j].s_Min[0] + ptr[i][j].s_Min[1]) / 2) * (double)1000000 / freq.QuadPart);
+				maxTime = ((((double)ptr[i][j].s_Max[0] + (double)ptr[i][j].s_Max[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
+				minTime = ((((double)ptr[i][j].s_Min[0] + (double)ptr[i][j].s_Min[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
 				avgTime = (((ptr[i][j].s_TotalTime - ptr[i][j].s_Max[0] - ptr[i][j].s_Max[1] - ptr[i][j].s_Min[0] - ptr[i][j].s_Min[1]) / (ptr[i][j].s_CallTime - 4)) * (double)1000000 / freq.QuadPart);
 
 
 
-				ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, L"Thread ID : %d |         %s |          %4lf ㎲ |          %4lf ㎲ |           %4lf ㎲ |      %ld | \n", threadID, ptr[i][j].s_Name, avgTime, minTime, maxTime, ptr[i][j].s_CallTime);
+				ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0,row, threadID, ptr[i][j].s_Name.c_str(), avgTime, minTime, maxTime, (long long)ptr[i][j].s_CallTime);
 				if (ret != S_OK)
 				{
-					__debugbreak();
+					for (int i = 0; i < m_ArrayIndex; i++)
+						delete[] ptr[i];
+
+					delete[] pTotal;
+
+					free(pFileBuffer);
+
+					return false;
 				}
 
 				//Total배열 순회 하면서 같은 Tag있으면 더해주기
@@ -335,10 +357,17 @@ public:
 			}
 
 			//한 스레드 샘플 데이터 Copy했으면 ----- 만들기
-			ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, L"-------------------------------------------------------------------------------------------------------\n");
+			ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, line);
 			if (ret != S_OK)
 			{
-				__debugbreak();
+				for (int i = 0; i < m_ArrayIndex; i++)
+					delete[] ptr[i];
+
+				delete[] pTotal;
+
+				free(pFileBuffer);
+
+				return false;
 			}
 		}
 
@@ -352,10 +381,17 @@ public:
 
 			cnt = pTotal[i].s_Cnt;
 
-			ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, L"         Total Data   |         %s |          %4lf ㎲ |          %4lf ㎲ |           %4lf ㎲ |      %ld | \n", pTotal[i].s_Name,pTotal[i].s_TotalAvgTime / cnt, pTotal[i].s_TotalMinTime / cnt, pTotal[i].s_TotalMaxTime / cnt, pTotal[i].s_TotalCallTime);
+			ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0, total, L"TOTAL", pTotal[i].s_Name.c_str(), pTotal[i].s_TotalAvgTime / cnt, pTotal[i].s_TotalMinTime / cnt, pTotal[i].s_TotalMaxTime / cnt, (long long)pTotal[i].s_TotalCallTime);
 			if (ret != S_OK)
 			{
-				__debugbreak();
+				for (int i = 0; i < m_ArrayIndex; i++)
+					delete[] ptr[i];
+
+				delete[] pTotal;
+
+				free(pFileBuffer);
+
+				return false;
 			}
 		}
 
@@ -365,14 +401,19 @@ public:
 		err = _wfopen_s(&fp, filename, L"wb");
 		if (err != 0)
 		{
-			wprintf(L"파일 열기 실패. 에러 코드: %d \n", err);
-			__debugbreak();
-			return;
+			for (int i = 0; i < m_ArrayIndex; i++)
+				delete[] ptr[i];
+
+			delete[] pTotal;
+
+			free(pFileBuffer);
+
+			return false;
 		}
 
 
 		//저장
-		fwrite(pDataBuffer, MAX_HEADER_SIZE + (MAX_STRING_SIZE) * (totalsize + maxsize + m_ArrayIndex), 1, fp);
+		fwrite(pFileBuffer, bufferSize, 1, fp);
 
 
 		// 4. 스트림 닫기 및 뒷 정리
@@ -383,7 +424,10 @@ public:
 
 		delete[] pTotal;
 
- 		free(pDataBuffer);
+ 		free(pFileBuffer);
+
+
+		return true;
 	}
 
 
@@ -447,7 +491,7 @@ public:
 
 
 		if (str.size() >= MAX_STRING_SIZE)
-			__debugbreak();
+			return;
 
 		//스레드 샘플링 데이터 자료구조에 접근
 		PROFILE_MAP_PTR pTable;

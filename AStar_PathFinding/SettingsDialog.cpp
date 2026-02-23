@@ -1,10 +1,12 @@
 #include <windows.h>
 #include <vector>
+#include <queue>
 #include "resource1.h"
 #include "Map.h"
 #include "MapGenerator.h"
-#include "Renderer.h"
+#include "PriorityQueue.h"
 #include "PathFinder.h"
+#include "Renderer.h"
 #include "AppController.h"
 #include "SettingsDialog.h"
 
@@ -47,6 +49,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 	// 다이얼로그 안에서 사용자가 특정 버튼 누름 등 액션 발생시 처리되는 이벤트
 	// wParam에 여러 정보들 섞여 있음. 하위 16bit(LOWORD)에는 메뉴ID, 버튼 ID, 컨트롤 ID를 담고 있음.
 	case WM_COMMAND:
+	{
 		switch (LOWORD(wParam))
 		{
 			// OK 버튼 눌렸을 때 처리
@@ -57,7 +60,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_MODE);
 
 			// 콤보 박스의 항목 리스트가 현재 사용자가 선택한 것인지 얻기(0번째 인덱스 부터 시작)
-			int sel = (int)SendMessage(hCombo,CB_GETCURSEL, 0, 0);
+			int sel = (int)SendMessage(hCombo, CB_GETCURSEL, 0, 0);
 
 			if (sel == CB_ERR)
 			{
@@ -81,6 +84,12 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 				return true;
 			}
 
+			UINT64 count = (int)GetDlgItemInt(hDlg, IDC_EDIT_COUNT, &ok, false);
+			if (!ok)
+			{
+				MessageBox(hDlg, L"테스트 횟수를 입력하세요", L"Error", MB_OK);
+				return true;
+			}
 
 			HWND hwnd = (HWND)GetWindowLongPtr(hDlg, DWLP_USER);
 
@@ -101,7 +110,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			set.m_mapHeight = h;
 			set.m_mapWidth = w;
-
+			set.m_count = count;
 			pController->Init(set, hwnd);
 
 			// 다이얼로그 창 닫기
@@ -113,11 +122,15 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			EndDialog(hDlg, IDCANCEL);
 			return true;
 
+		default:
+			return false;
 		}
-
-		break;
+	}
+	break;
 	}
 
+
+	
 
 	return false;
 }

@@ -60,12 +60,12 @@
     <ClInclude Include="SettingsDialog.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AStar_PathFinding.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ProfilerTLS.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="AppController.cpp">

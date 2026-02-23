@@ -6,19 +6,19 @@ public:
 	~Renderer();
 
 	void Init(HWND hWnd);
-	void Render(HWND hWnd, const Map& map);
+	void Render(HWND hWnd, const Map& map, const PathFinder& pathfinder);
 
-	INT GetGridSize() const noexcept
+	inline INT GetGridSize() const noexcept
 	{
 		return m_gridSize;
 	}
 
-	INT GetOffsetX() const noexcept
+	inline INT GetOffsetX() const noexcept
 	{
 		return m_offsetX;
 	}
 
-	INT GetOffsetY() const noexcept
+	inline INT GetOffsetY() const noexcept
 	{
 		return m_offsetY;
 	}
@@ -31,8 +31,10 @@ public:
 	}
 
 private:
-	void RenderPen(HDC memdc, const Map& map);
-	void RenderBrush(HDC memdc, const Map& map);
+	void RenderPen(HDC memdc, const Map& map, const PathFinder& pathfinder);
+	void RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfinder);
+	void RenderText(HDC memdc, const Map& map, const PathFinder& pathfinder);
+	void DrawTileTextCliped(HDC memdc, const RECT& tileRC, const WCHAR* buf);
 
 private:
 	INT     m_gridSize;      // 타일 1칸이 화면에서 몇 픽셀인지의 크기
@@ -46,6 +48,8 @@ private:
 	HBRUSH  m_wallBrush;     // 장애물 브러쉬
 	HBRUSH  m_startBrush;    // 시작점 브러쉬
 	HBRUSH  m_goalBrush;     // 종착점 브러쉬
+	HBRUSH  m_pathBrush;     // 경로   브러쉬
+	HBRUSH  m_nodeBrush;     // close된 노드 브러쉬
 	RECT    m_rc;            // 윈도우 클라이언트 영역(출력 영역) 구조체
 };
 
