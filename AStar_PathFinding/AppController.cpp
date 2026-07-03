@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <vector>
 #include <string>
 #include <queue>
@@ -34,7 +34,7 @@ void AppController::Init(const settings& src, HWND hWnd)
 
 void AppController::OnKeyDown(HWND hwnd, WPARAM wParam)
 {
-	// ±æÃ£±â
+	// ê¸¸ì°¾ê¸°
 	if (wParam == VK_SPACE)
 	{
 		int sX = m_map.GetStartPos().m_xpos;
@@ -46,7 +46,7 @@ void AppController::OnKeyDown(HWND hwnd, WPARAM wParam)
 		InvalidateRect(hwnd, NULL, false);
 	}
 
-	// ÀüÃ¼ Map ÃÊ±âÈ­
+	// ì „ì²´ Map ì´ˆê¸°í™”
 	else if (wParam == VK_TAB)
 	{
 		m_map.MapClear();
@@ -81,20 +81,20 @@ void AppController::OnMouseWheel(HWND hwnd, int wheelDelta, int clientX, int cli
 	if (newGrid == oldGridSize)
 		return;
 
-	// ±âÁ¸ Å¸ÀÏ ÁÂÇ¥ °è»ê
+	// ê¸°ì¡´ íƒ€ì¼ ì¢Œí‘œ ê³„ì‚°
 	int offsetX = m_renderer.GetOffsetX();
 	int offsetY = m_renderer.GetOffsetY();
 	int tileX = (clientX - offsetX) / oldGridSize;
 	int tileY = (clientY - offsetY) / oldGridSize;
 
-	// »õ·Î¿î GridSize¿Í °è»êÇÑ Å¸ÀÏ ÁÂÇ¥¸¦ ±âÁØÀ¸·Î »õ·Î¿î offset °è»ê
+	// ìƒˆë¡œìš´ GridSizeì™€ ê³„ì‚°í•œ íƒ€ì¼ ì¢Œí‘œë¥¼ ê¸°ì¤€ìœ¼ë¡œ ìƒˆë¡œìš´ offset ê³„ì‚°
 	m_renderer.SetZoomData(newGrid, clientX - tileX * newGrid, clientY - tileY * newGrid);
 	InvalidateRect(hwnd, nullptr, FALSE);
 }
 
 void AppController::OnLButtonDown(HWND hwnd, int clientX, int clientY)
 {
-	// Å¸ÀÏ ÁÂÇ¥ °è»ê
+	// íƒ€ì¼ ì¢Œí‘œ ê³„ì‚°
 	int gridSize = m_renderer.GetGridSize();
 	int offX = m_renderer.GetOffsetX();
 	int offY = m_renderer.GetOffsetY();
@@ -146,7 +146,7 @@ void AppController::OnLButtonDown(HWND hwnd, int clientX, int clientY)
 
 void AppController::OnRButtonDown(HWND hwnd, int clientX, int clientY)
 {
-	// Å¸ÀÏ ÁÂÇ¥ °è»ê
+	// íƒ€ì¼ ì¢Œí‘œ ê³„ì‚°
 	int gridSize = m_renderer.GetGridSize();
 	int offX = m_renderer.GetOffsetX();
 	int offY = m_renderer.GetOffsetY();
@@ -163,7 +163,7 @@ void AppController::OnRButtonDown(HWND hwnd, int clientX, int clientY)
 	Map::TilePos start = m_map.GetStartPos();
 	Map::TilePos goal = m_map.GetGoalPos();
 
-	// ¹öÆ° Å° È®ÀÎ
+	// ë²„íŠ¼ í‚¤ í™•ì¸
 	bool shift = (GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool alt = (GetKeyState(VK_MENU) & 0x8000) != 0;
 
@@ -199,7 +199,7 @@ void AppController::OnLButtonUp()
 
 void AppController::OnMouseMove(HWND hwnd, WPARAM wParam, int clientX, int clientY)
 {
-	// Å¸ÀÏ ÁÂÇ¥ °è»ê
+	// íƒ€ì¼ ì¢Œí‘œ ê³„ì‚°
 	int gridSize = m_renderer.GetGridSize();
 	int offX = m_renderer.GetOffsetX();
 	int offY = m_renderer.GetOffsetY();
@@ -283,16 +283,16 @@ void AppController::OnMButtonUp()
 
 void AppController::OnAutoPathFinding(HWND hwnd)
 {
-	// Map ÃÊ±âÈ­
+	// Map ì´ˆê¸°í™”
 	while (true)
 	{
 		m_map.MapClear();
 		m_pathfinder.PathClear();
 
-		// º® ·£´ý »ý¼º
+		// ë²½ ëžœë¤ ìƒì„±
 		m_generator.GenProbWall(m_map);
 
-		// ½ÃÀÛÁ¡, µµÂøÁ¡ ·£´ý »ý¼º
+		// ì‹œìž‘ì , ë„ì°©ì  ëžœë¤ ìƒì„±
 		int sxpos = 0;
 		int sypos = 0;
 		int gxpos = 0;
@@ -306,7 +306,7 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 			sxpos = rand() % w;
 			sypos = rand() % h;
 
-			// ½ÃÀÛÁ¡ ÁÂÇ¥°¡ ºñ¾îÀÖÁö ¾Ê´Ù¸é ´Ù¸¥ ÁÂÇ¥ ¼±ÅÃ
+			// ì‹œìž‘ì  ì¢Œí‘œê°€ ë¹„ì–´ìžˆì§€ ì•Šë‹¤ë©´ ë‹¤ë¥¸ ì¢Œí‘œ ì„ íƒ
 			if (!(m_map.GetTilePosType(sxpos, sypos) == Map::TileType::Empty))
 				continue;
 
@@ -317,7 +317,7 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 				gxpos = rand() % w;
 				gypos = rand() % h;
 
-				// µµÂøÁ¡ ÁÂÇ¥°¡ ºñ¾îÀÖÁö ¾Ê´Ù¸é ´Ù¸¥ ÁÂÇ¥ ¼±ÅÃ
+				// ë„ì°©ì  ì¢Œí‘œê°€ ë¹„ì–´ìžˆì§€ ì•Šë‹¤ë©´ ë‹¤ë¥¸ ì¢Œí‘œ ì„ íƒ
 				if (!(m_map.GetTilePosType(gxpos, gypos) == Map::TileType::Empty))
 					continue;
 
@@ -328,7 +328,7 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 			break;
 		}
 
-		// ±æÃ£±â ½ÇÆÐÇÏ¸é ´Ù½Ã ¸Ê ÃÊ±âÈ­ ÇØ¼­ º®°ú ½ÃÀÛÁ¡, µµÂøÁ¡ ¼¼ÆÃÇÏ±â
+		// ê¸¸ì°¾ê¸° ì‹¤íŒ¨í•˜ë©´ ë‹¤ì‹œ ë§µ ì´ˆê¸°í™” í•´ì„œ ë²½ê³¼ ì‹œìž‘ì , ë„ì°©ì  ì„¸íŒ…í•˜ê¸°
 		if (!m_pathfinder.PathFinding(sxpos, sypos, gxpos, gypos, m_map, true))
 			continue;
 		
@@ -341,7 +341,7 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 	m_testCnt--;
 	if (m_testCnt == 0)
 	{
-		// Å×½ºÆ® È½¼ö ³¡³ª¸é ÆÄÀÏ ÀúÀå ÈÄ ÇÁ·Î¼¼½º Á¾·á
+		// í…ŒìŠ¤íŠ¸ íšŸìˆ˜ ëë‚˜ë©´ íŒŒì¼ ì €ìž¥ í›„ í”„ë¡œì„¸ìŠ¤ ì¢…ë£Œ
 		CProfilerManager::GetInstance()->ProfileDataOutText(const_cast<WCHAR*>(L"PathFinding"));
 		PostQuitMessage(0);
 		return;

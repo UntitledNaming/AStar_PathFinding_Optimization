@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 class Map
 {
 public:
@@ -33,7 +33,7 @@ public:
 		return true;
 	}
 
-	// const noexcept : ¸â¹ö º¯¼ö °ª ¾È¹Ù²Ù°í ¿¹¿Ü ´øÁöÁö ¾Ê´Â°Í
+	// const noexcept : ë©¤ë²„ ë³€ìˆ˜ ê°’ ì•ˆë°”ê¾¸ê³  ì˜ˆì™¸ ë˜ì§€ì§€ ì•ŠëŠ”ê²ƒ
 	inline INT GetWidth() const noexcept
 	{
 		return m_width;
@@ -85,9 +85,9 @@ public:
 
 
 private:
-	std::vector<std::vector<TileType>> m_tileMap; // ½ÃÀÛÁ¡°ú Á¾Á¡
+	std::vector<std::vector<TileType>> m_tileMap; // ì‹œì‘ì ê³¼ ì¢…ì 
 	INT                                m_width;
 	INT                                m_height;
-	TilePos                            m_start;   // ½¬ÇÁÆ® + ¿ìÅ¬¸¯ 
-	TilePos                            m_goal;    // ¾ËÆ®   + ¿ìÅ¬¸¯
+	TilePos                            m_start;   // ì‰¬í”„íŠ¸ + ìš°í´ë¦­ 
+	TilePos                            m_goal;    // ì•ŒíŠ¸   + ìš°í´ë¦­
 };

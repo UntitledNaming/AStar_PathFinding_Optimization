@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define WM_AUTO_PATHFINDING (WM_APP+1)
 
 class AppController
@@ -21,8 +21,8 @@ public:
 	struct settings
 	{
 		RunMode m_mode      = RunMode::Manual;
-		INT     m_mapWidth  = 100;             // ±×¸®µå°¡ °¡·Î·Ñ 100°³
-		INT     m_mapHeight = 50;              // ±×¸®µå°¡ ¼¼·Î·Î 50°³
+		INT     m_mapWidth  = 100;             // ê·¸ë¦¬ë“œê°€ ê°€ë¡œë¡¤ 100ê°œ
+		INT     m_mapHeight = 50;              // ê·¸ë¦¬ë“œê°€ ì„¸ë¡œë¡œ 50ê°œ
 		UINT64  m_count = 0;
 	};
 
@@ -42,7 +42,7 @@ public:
 		return m_mode;
 	}
 
-	// °´Ã¼ »ç¿ë ÇÚµé·¯ 
+	// ê°ì²´ ì‚¬ìš© í•¸ë“¤ëŸ¬ 
 	void OnKeyDown(HWND hwnd, WPARAM wParam);
 	void OnPaint(HWND hWnd);
 	void OnMouseWheel(HWND hwnd, int wheelDelta, int clientX, int clientY);
@@ -55,10 +55,10 @@ public:
 	void OnAutoPathFinding(HWND hwnd);
 
 private:
-	RunMode      m_mode;        // ¼öµ¿ ¸Ê »ı¼º, ÀÚµ¿ ¸Ê »ı¼º
-	MouseMode    m_drag;        // ¸¶¿ì½º ¸ğµå
-	Pos          m_oldMousePos; // ÀÌÀü ¸¶¿ì½º À§Ä¡
-	UINT64       m_testCnt;     // ÀÚµ¿ ¸ğµå ±æÃ£±â È½¼ö
+	RunMode      m_mode;        // ìˆ˜ë™ ë§µ ìƒì„±, ìë™ ë§µ ìƒì„±
+	MouseMode    m_drag;        // ë§ˆìš°ìŠ¤ ëª¨ë“œ
+	Pos          m_oldMousePos; // ì´ì „ ë§ˆìš°ìŠ¤ ìœ„ì¹˜
+	UINT64       m_testCnt;     // ìë™ ëª¨ë“œ ê¸¸ì°¾ê¸° íšŸìˆ˜
 	Map          m_map;
 	MapGenerator m_generator;
 	Renderer     m_renderer;

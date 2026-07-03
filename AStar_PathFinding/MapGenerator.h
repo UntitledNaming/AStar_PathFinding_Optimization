@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 typedef int Probability;
 
@@ -12,7 +12,7 @@ public:
 	void GenProbWall(Map& map);
 
 private:
-	std::vector<std::vector<Probability>> m_probBoard; // ¶È°°Àº Å¸ÀÏ ¸Ê¿¡ °¢ Å¸ÀÏ ¸¶´Ù È®·ü ´Ù¸£°Ô ¼³Á¤ÇØ¼­ º® »ı¼º
+	std::vector<std::vector<Probability>> m_probBoard; // ë˜‘ê°™ì€ íƒ€ì¼ ë§µì— ê° íƒ€ì¼ ë§ˆë‹¤ í™•ë¥  ë‹¤ë¥´ê²Œ ì„¤ì •í•´ì„œ ë²½ ìƒì„±
 
 };
 

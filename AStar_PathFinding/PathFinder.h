@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 class PathFinder
 {
 public:
 	struct st_Tile
 	{
-		int     m_pXpos = -1;      // ÇØ´ç Å¸ÀÏÀÇ ºÎ¸ğ Å¸ÀÏ x ÁÂÇ¥
-		int     m_pYpos = -1;      // ÇØ´ç Å¸ÀÏÀÇ ºÎ¸ğ Å¸ÀÏ y ÁÂÇ¥
-		bool    m_close = false;   // close¿¡ µé¾î°£ °æ¿ì true
-		float   m_gVal = -1;          // G : À¯Å¬¸®µå(´ë°¢ 1.5)
-		float   m_hVal = -1;          // H : À¯Å¬¸®µå
+		int     m_pXpos = -1;      // í•´ë‹¹ íƒ€ì¼ì˜ ë¶€ëª¨ íƒ€ì¼ x ì¢Œí‘œ
+		int     m_pYpos = -1;      // í•´ë‹¹ íƒ€ì¼ì˜ ë¶€ëª¨ íƒ€ì¼ y ì¢Œí‘œ
+		bool    m_close = false;   // closeì— ë“¤ì–´ê°„ ê²½ìš° true
+		float   m_gVal = -1;          // G : ìœ í´ë¦¬ë“œ(ëŒ€ê° 1.5)
+		float   m_hVal = -1;          // H : ìœ í´ë¦¬ë“œ
 		float   m_fVal = -1;          // F = G + H
 
 	}typedef Tile;
@@ -49,7 +49,7 @@ public:
 
 	bool PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const Map& map, bool automode = false);
 
-	// È£ÃâÀÚ°¡ ¸â¹öÀÎ m_closelist¸¦ ¼öÁ¤ÇÏÁö ¸øÇÏ°Ô const ¸®ÅÏ
+	// í˜¸ì¶œìê°€ ë©¤ë²„ì¸ m_closelistë¥¼ ìˆ˜ì •í•˜ì§€ ëª»í•˜ê²Œ const ë¦¬í„´
 	inline Tile** GetResult() const
 	{
 		return m_result;
@@ -65,10 +65,10 @@ public:
 private:
 	void Search(Dir dir, int xpos, int ypos, int gxpos, int gypos, float fVal, float gVal, const Map& map);
 	void Search(Dir dir, int xpos, int ypos,  const Map& map , std::queue<std::pair<int, int>>& que, std::vector<std::vector<bool>>& search);
-	bool ValidateGoal(int sxpos, int sypos, int gxpos, int gypos, const Map& map);                    // ¸ñÀûÁö ÁÂÇ¥·Î ±æÃ£±â°¡ °¡´ÉÇÑÁö BFS·Î ¼±Çà Ã¼Å©ÇÏ´Â ÇÔ¼ö
+	bool ValidateGoal(int sxpos, int sypos, int gxpos, int gypos, const Map& map);                    // ëª©ì ì§€ ì¢Œí‘œë¡œ ê¸¸ì°¾ê¸°ê°€ ê°€ëŠ¥í•œì§€ BFSë¡œ ì„ í–‰ ì²´í¬í•˜ëŠ” í•¨ìˆ˜
 
 private:
-	bool                                                                  m_pathFlag;                 // ±æÃ£±â °á°ú°¡ ³ª¿Ô´ÂÁö È®ÀÎ ÇÃ·¡±×
+	bool                                                                  m_pathFlag;                 // ê¸¸ì°¾ê¸° ê²°ê³¼ê°€ ë‚˜ì™”ëŠ”ì§€ í™•ì¸ í”Œë˜ê·¸
 	int                                                                   m_width;	                  
 	int                                                                   m_height;	                  
 

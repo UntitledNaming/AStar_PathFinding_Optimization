@@ -1,4 +1,4 @@
-#define PROFILE
+ï»¿#define PROFILE
 #include <windows.h>
 #include <queue>
 #include <vector>
@@ -22,10 +22,10 @@ PathFinder::~PathFinder()
 
 void PathFinder::Init(int width, int height)
 {
-	// Tile* Æ÷ÀÎÅÍ º¯¼ö ÀúÀåÇÒ ¹è¿­À» »ı¼º
+	// Tile* í¬ì¸í„° ë³€ìˆ˜ ì €ì¥í•  ë°°ì—´ì„ ìƒì„±
 	m_result = new Tile*[height];
 
-	// w * h Å©±âÀÇ Tile ±¸Á¶Ã¼¸¦ »ı¼º
+	// w * h í¬ê¸°ì˜ Tile êµ¬ì¡°ì²´ë¥¼ ìƒì„±
 	Tile* data = new Tile[width * height];
 
 	for (int i = 0; i < height; i++)
@@ -65,7 +65,7 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 
 	while (true)
 	{
-		// ¸ñÀûÁö È®ÀÎ¾ÈµÈ »óÅÂ¿¡¼­ ´õ ÀÌ»ó ³ëµå¸¦ ¹æ¹®ÇØ¼­ Á¤Á¡ ¹ß°ßÇÒ¼ö ¾ø´Â °æ¿ì false ¸®ÅÏ
+		// ëª©ì ì§€ í™•ì¸ì•ˆëœ ìƒíƒœì—ì„œ ë” ì´ìƒ ë…¸ë“œë¥¼ ë°©ë¬¸í•´ì„œ ì •ì  ë°œê²¬í• ìˆ˜ ì—†ëŠ” ê²½ìš° false ë¦¬í„´
 		if (m_openlist.empty())
 			return false;
 
@@ -75,7 +75,7 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 
 		if (cur.m_xpos == gXpos && cur.m_ypos == gYpos)
 		{
-			// closelist¿¡ ¸ñÀûÁö ³Ö±â
+			// closelistì— ëª©ì ì§€ ë„£ê¸°
 			m_result[cur.m_ypos][cur.m_xpos].m_close = true;
 			break;
 		}
@@ -84,10 +84,10 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 			continue;
 
 
-		// Á¤Á¡ ¹æ¹®
+		// ì •ì  ë°©ë¬¸
 		m_result[cur.m_ypos][cur.m_xpos].m_close = true;
 
-		// Á¤Á¡ ÁÖÀ§ 8¹æÇâ Å½»ö
+		// ì •ì  ì£¼ìœ„ 8ë°©í–¥ íƒìƒ‰
 		for (int i = 0; i < 8; i++)
 		{
 			Search((Dir)i, cur.m_xpos, cur.m_ypos, gXpos, gYpos, cur.m_fVal, cur.m_gVal, map);
@@ -102,7 +102,7 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 
 void PathFinder::PathClear()
 {
-	// ±æÃ£±â Á¦´ë·Î ¾ÈµÇ°í ÃÊ±âÈ­ ÇÏ´Â °æ¿ì ¸®ÅÏ
+	// ê¸¸ì°¾ê¸° ì œëŒ€ë¡œ ì•ˆë˜ê³  ì´ˆê¸°í™” í•˜ëŠ” ê²½ìš° ë¦¬í„´
 	if (!m_pathFlag)
 		return;
 
@@ -135,7 +135,7 @@ void PathFinder::Search(Dir dir, int xpos, int ypos, int gxpos, int gypos, float
 	int   dx = 0;
 	int   dy = 0;
 
-	// ÃÊ±âÈ­ ÀÛ¾÷ Á¦°Å À§ÇØ staticÀ¸·Î ¼±¾ğ 
+	// ì´ˆê¸°í™” ì‘ì—… ì œê±° ìœ„í•´ staticìœ¼ë¡œ ì„ ì–¸ 
 	static int   dir_x[8] = { 0,0,1,-1,-1,1,1,-1 };
 	static int   dir_y[8] = { -1,1,0,0,-1,-1,1,1 };
 	static float cost[8] = { 1,1,1,1,1.5,1.5,1.5,1.5 };
@@ -143,26 +143,26 @@ void PathFinder::Search(Dir dir, int xpos, int ypos, int gxpos, int gypos, float
 	x = xpos + dir_x[(int)dir];
 	y = ypos + dir_y[(int)dir];
 
-	// ¹üÀ§ Ã¼Å©
+	// ë²”ìœ„ ì²´í¬
 	if (x < 0 || x >= m_width || y < 0 || y >= m_height)
 		return;
 
-	// ÇØ´ç ÁÂÇ¥¿¡ º® ÀÖ´ÂÁö Ã¼Å©
+	// í•´ë‹¹ ì¢Œí‘œì— ë²½ ìˆëŠ”ì§€ ì²´í¬
 	if (map.GetTilePosType(x, y) == Map::TileType::Wall)
 		return;
 
-	// ÀÌ¹Ì pq¿¡¼­ »ÌÇô¼­ È®Á¤µÈ ³ëµå¸é ±»ÀÌ openlist¿¡ ³ÖÀ» ÇÊ¿ä¾øÀ½. ÃÖ¼ÒÀÇ F°¡ ÀÌ¹Ì ³ª¿Â »óÅÂÀÓ.
+	// ì´ë¯¸ pqì—ì„œ ë½‘í˜€ì„œ í™•ì •ëœ ë…¸ë“œë©´ êµ³ì´ openlistì— ë„£ì„ í•„ìš”ì—†ìŒ. ìµœì†Œì˜ Fê°€ ì´ë¯¸ ë‚˜ì˜¨ ìƒíƒœì„.
 	if (m_result[y][x].m_close)
 		return;
 
-	// g °è»ê
+	// g ê³„ì‚°
 	newG = gVal + cost[(int)dir];
 
-	// Ã³À½ º» ÁÂÇ¥µµ ¾Æ´Ñµ¥ °è»êÇÑ gValÀÌ ±âÁ¸ gValº¸´Ù ÀÌ»óÀÌ¸é ±»ÀÌ OpenList¿¡ ³ÖÁö ¾Ê°í ¸®ÅÏ
+	// ì²˜ìŒ ë³¸ ì¢Œí‘œë„ ì•„ë‹Œë° ê³„ì‚°í•œ gValì´ ê¸°ì¡´ gValë³´ë‹¤ ì´ìƒì´ë©´ êµ³ì´ OpenListì— ë„£ì§€ ì•Šê³  ë¦¬í„´
 	if (newG >= m_result[y][x].m_gVal && m_result[y][x].m_gVal != -1)
 		return;
 
-	// h °è»ê
+	// h ê³„ì‚°
 	dx = abs(x - gxpos);
 	dy = abs(y - gypos);
 	h = 1 * (dx + dy) + (1.5 - 2 * 1) * min(dx, dy);
@@ -250,15 +250,15 @@ void PathFinder::Search(Dir dir, int xpos, int ypos, const Map& map, std::queue<
 		return;
 	}
 
-	// ¹üÀ§ Ã¼Å©
+	// ë²”ìœ„ ì²´í¬
 	if (x < 0 || x >= m_width || y < 0 || y >= m_height)
 		return;
 
-	// ÇØ´ç ÁÂÇ¥¿¡ º® ÀÖ´ÂÁö Ã¼Å©
+	// í•´ë‹¹ ì¢Œí‘œì— ë²½ ìˆëŠ”ì§€ ì²´í¬
 	if (map.GetTilePosType(x, y) == Map::TileType::Wall)
 		return;
 
-	// Å½»ö Çß´ÂÁö Ã¼Å©
+	// íƒìƒ‰ í–ˆëŠ”ì§€ ì²´í¬
 	if (search[y][x])
 		return;
 
@@ -272,7 +272,7 @@ bool PathFinder::ValidateGoal(int sxpos, int sypos, int gxpos, int gypos, const 
 	std::queue<std::pair<int, int>> q;
 	std::vector<std::vector<bool>> visit(m_height, std::vector<bool>(m_width, false));
 
-	// ½ÃÀÛÁ¡ ³Ö±â
+	// ì‹œì‘ì  ë„£ê¸°
 	q.push(std::pair<int, int>(sxpos, sypos));
 
 	while (!q.empty())
@@ -286,7 +286,7 @@ bool PathFinder::ValidateGoal(int sxpos, int sypos, int gxpos, int gypos, const 
 			break;
 		}
 
-		// 8¹æÇâ ÁÂÇ¥ Å½»ö
+		// 8ë°©í–¥ ì¢Œí‘œ íƒìƒ‰
 		for (int i = 0; i < 8; i++)
 		{
 			Search((Dir)i, pos.first, pos.second, map, q, visit);

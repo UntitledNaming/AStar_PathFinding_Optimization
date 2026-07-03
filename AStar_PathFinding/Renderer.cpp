@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <vector>
 #include <queue>
 #include "framework.h"
@@ -9,16 +9,16 @@
 
 Renderer::~Renderer()
 {
-	// ¸Ş¸ğ¸® DC¿¡ ¿¬°áµÈ ±âÁ¸ BITMAP ¿¬°á Á¦°Å
+	// ë©”ëª¨ë¦¬ DCì— ì—°ê²°ëœ ê¸°ì¡´ BITMAP ì—°ê²° ì œê±°
 	SelectObject(m_memDC, m_bitMapOld);
 
-	// ¸Ş¸ğ¸® DC¿¡¼­ ¿¬°á ²÷Àº ºñÆ®¸Ê Á¦°Å
+	// ë©”ëª¨ë¦¬ DCì—ì„œ ì—°ê²° ëŠì€ ë¹„íŠ¸ë§µ ì œê±°
 	DeleteObject(m_bitMap);
 
-	// ¸Ş¸ğ¸® DC Á¦°Å
+	// ë©”ëª¨ë¦¬ DC ì œê±°
 	DeleteObject(m_memDC);
 
-	// Ææ, ºê·¯½Ã Á¦°Å
+	// íœ, ë¸ŒëŸ¬ì‹œ ì œê±°
 	DeleteObject(m_gridPen);
 	DeleteObject(m_wallBrush);
 	DeleteObject(m_startBrush);
@@ -30,7 +30,7 @@ Renderer::~Renderer()
 
 void Renderer::Init(HWND hWnd)
 {
-	HDC hdc = GetDC(hWnd); // À©µµ¿ì Å¬¶óÀÌ¾ğÆ® ¿µ¿ª¿¡ ±×¸± ¼ö ÀÖ´Â hdc¸¦ ¹Ş±â(´ë¿©)
+	HDC hdc = GetDC(hWnd); // ìœˆë„ìš° í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì— ê·¸ë¦´ ìˆ˜ ìˆëŠ” hdcë¥¼ ë°›ê¸°(ëŒ€ì—¬)
 	GetClientRect(hWnd, &m_rc);
 
 	m_gridSize = 16;
@@ -38,12 +38,12 @@ void Renderer::Init(HWND hWnd)
 	m_offsetY = 0;
 	m_bitMap = CreateCompatibleBitmap(hdc, m_rc.right, m_rc.bottom);
 	m_memDC = CreateCompatibleDC(hdc);
-	ReleaseDC(hWnd, hdc); // hdc os¿¡°Ô ¹İ³³
+	ReleaseDC(hWnd, hdc); // hdc osì—ê²Œ ë°˜ë‚©
 
-	// ¸Ş¸ğ¸® DC¿¡ »ı¼ºÇÑ ºñÆ®¸ÊÀ» ¿¬°áÇÏ°í ±âÁ¸¿¡ ¿¬°áµÇ¾î ÀÖ´ø ºñÆ®¸ÊÀ» ¸®ÅÏÇØ¼­ ¹ŞÀ½
+	// ë©”ëª¨ë¦¬ DCì— ìƒì„±í•œ ë¹„íŠ¸ë§µì„ ì—°ê²°í•˜ê³  ê¸°ì¡´ì— ì—°ê²°ë˜ì–´ ìˆë˜ ë¹„íŠ¸ë§µì„ ë¦¬í„´í•´ì„œ ë°›ìŒ
 	m_bitMapOld = (HBITMAP)SelectObject(m_memDC, m_bitMap);
 
-	// Ææ ¹× ºê·¯½Ã »ı¼º
+	// íœ ë° ë¸ŒëŸ¬ì‹œ ìƒì„±
 	m_gridPen = CreatePen(PS_SOLID, 1, RGB(200, 200, 200));
 	m_pathPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
 	m_wallBrush = CreateSolidBrush((RGB(100, 100, 100)));
@@ -82,7 +82,7 @@ void Renderer::RenderPen(HDC memdc, const Map& map, const PathFinder& pathfinder
 	int tileWPixel = w * m_gridSize;
 	int tileHPixel = h * m_gridSize;
 
-	// Å¸ÀÏ ¸ÊÀÇ °¡·Î Å¸ÀÏ °¹¼ö ¸¸Å­ ¼¼·Î¼± ±ß±â
+	// íƒ€ì¼ ë§µì˜ ê°€ë¡œ íƒ€ì¼ ê°¯ìˆ˜ ë§Œí¼ ì„¸ë¡œì„  ê¸‹ê¸°
 	for (int tx = 0; tx <= w; tx++)
 	{
 		int cx = m_offsetX + tx * m_gridSize;
@@ -93,7 +93,7 @@ void Renderer::RenderPen(HDC memdc, const Map& map, const PathFinder& pathfinder
 		LineTo(memdc, cx, y1);
 	}
 
-	// Å¸ÀÏ ¸ÊÀÇ ¼¼·Î Å¸ÀÏ °¹¼ö ¸¸Å­ °¡·Î¼± ±ß±â
+	// íƒ€ì¼ ë§µì˜ ì„¸ë¡œ íƒ€ì¼ ê°¯ìˆ˜ ë§Œí¼ ê°€ë¡œì„  ê¸‹ê¸°
 	for (int ty = 0; ty <= h; ty++)
 	{
 		int cy = m_offsetY + ty * m_gridSize;
@@ -105,7 +105,7 @@ void Renderer::RenderPen(HDC memdc, const Map& map, const PathFinder& pathfinder
 	}
 	SelectObject(memdc, hOldPen);
 
-	// °æ·Î ÁÙ ±×¸®±â
+	// ê²½ë¡œ ì¤„ ê·¸ë¦¬ê¸°
 	if (pathfinder.GetPathFlag())
 	{
 		int sxpos = map.GetStartPos().m_xpos;
@@ -150,7 +150,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 	{
 		for (int tx = 0; tx < w; tx++)
 		{
-			// Start »öÄ¥
+			// Start ìƒ‰ì¹ 
 			if (map.GetTilePosType(tx, ty) == Map::TileType::Start)
 			{
 				HBRUSH oldStartBrush = (HBRUSH)SelectObject(memdc, m_startBrush);
@@ -161,7 +161,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 				continue;
 				
 			}
-			// Goal »öÄ¥
+			// Goal ìƒ‰ì¹ 
 			else if (map.GetTilePosType(tx, ty) == Map::TileType::Goal)
 			{
 				HBRUSH oldGoalBrush = (HBRUSH)SelectObject(memdc, m_goalBrush);
@@ -172,7 +172,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 				continue;
 			}
 
-			// Wall »öÄ¥
+			// Wall ìƒ‰ì¹ 
 			else if (map.GetTilePosType(tx, ty) == Map::TileType::Wall)
 			{
 				HBRUSH oldWallBrush = (HBRUSH)SelectObject(memdc, m_wallBrush);
@@ -195,7 +195,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 	}
 
 
-	// °æ·Î »öÄ¥
+	// ê²½ë¡œ ìƒ‰ì¹ 
 	if (pathfinder.GetPathFlag())
 	{
 		int sxpos = map.GetStartPos().m_xpos;
@@ -225,7 +225,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 
 void Renderer::RenderText(HDC memdc, const Map& map, const PathFinder& pathfinder)
 {
-	// ÅØ½ºÆ® ¹è°æ Åõ¸íÇÏ°Ô ¸¸µé±â
+	// í…ìŠ¤íŠ¸ ë°°ê²½ íˆ¬ëª…í•˜ê²Œ ë§Œë“¤ê¸°
 	SetBkMode(memdc, TRANSPARENT);
 
 
@@ -237,18 +237,18 @@ void Renderer::RenderText(HDC memdc, const Map& map, const PathFinder& pathfinde
 	{
 		for (int x = 0; x < w; x++)
 		{
-			// ¹æ¹® ¾ÈÇÑ Å¸ÀÏÀº pass
+			// ë°©ë¬¸ ì•ˆí•œ íƒ€ì¼ì€ pass
 			if (result[y][x].m_gVal < 0)
 				continue;
 
-			// ¹æ¹® ÇßÀ¸¸é ÇØ´ç Å¸ÀÏÀÇ Å¬¶ó ÁÂÇ¥·Î »ç°¢ÇüÀ» ¸¸µë.
+			// ë°©ë¬¸ í–ˆìœ¼ë©´ í•´ë‹¹ íƒ€ì¼ì˜ í´ë¼ ì¢Œí‘œë¡œ ì‚¬ê°í˜•ì„ ë§Œë“¬.
 			RECT tileRc{ m_offsetX + x * m_gridSize,m_offsetY + y * m_gridSize, m_offsetX + (x + 1) * m_gridSize, m_offsetY + (y + 1) * m_gridSize };
 
-			// Ç¥½ÃÇÒ ÅØ½ºÆ®¸¦ buf¿¡ ÀúÀå
+			// í‘œì‹œí•  í…ìŠ¤íŠ¸ë¥¼ bufì— ì €ì¥
 			WCHAR buf[128];
 			swprintf_s(buf, L"g:%.0f\nh:%0.f\nf:%.0f", result[y][x].m_gVal, result[y][x].m_hVal, result[y][x].m_fVal);
 
-			// ½ÇÁ¦ ¸Ş¸ğ¸®dc¿¡ ¾²±â
+			// ì‹¤ì œ ë©”ëª¨ë¦¬dcì— ì“°ê¸°
 			DrawTileTextCliped(memdc, tileRc, buf);
 			
 		}
@@ -258,21 +258,21 @@ void Renderer::RenderText(HDC memdc, const Map& map, const PathFinder& pathfinde
 
 void Renderer::DrawTileTextCliped(HDC memdc, const RECT& tileRC, const WCHAR* buf)
 {
-	// ÇöÀç DC »óÅÂ(ÆùÆ®, Ææ, ºê·¯½Ã ,ÁÂÇ¥°èµî) ÀüÃ¼ ÀúÀå
+	// í˜„ì¬ DC ìƒíƒœ(í°íŠ¸, íœ, ë¸ŒëŸ¬ì‹œ ,ì¢Œí‘œê³„ë“±) ì „ì²´ ì €ì¥
 	int saved = SaveDC(memdc);
 
-	// Å¬¸³À» Å¸ÀÏ·Î Á¦ÇÑÇÔÀ¸·Î ¾ÕÀ¸·ÎÀÇ ¸ğµç ±×¸®±â ÀÛ¾÷ÀÌ ÇØ´ç »ç°¢Çü ¾È¿¡¸¸ º¸ÀÌ°í ¹ÛÀ¸·Î »ßÁ®³ª¿Â ºÎºĞÀº Àß¸²
+	// í´ë¦½ì„ íƒ€ì¼ë¡œ ì œí•œí•¨ìœ¼ë¡œ ì•ìœ¼ë¡œì˜ ëª¨ë“  ê·¸ë¦¬ê¸° ì‘ì—…ì´ í•´ë‹¹ ì‚¬ê°í˜• ì•ˆì—ë§Œ ë³´ì´ê³  ë°–ìœ¼ë¡œ ì‚ì ¸ë‚˜ì˜¨ ë¶€ë¶„ì€ ì˜ë¦¼
 	IntersectClipRect(memdc, tileRC.left, tileRC.top, tileRC.right, tileRC.bottom);
 
-	// ¿©¹é ÁÖ±â(»óÇÏÁÂ¿ì 2ÇÈ¼¿¾¿ Ãâ·Â ¿µ¿ª ÁÙÀÌ±â)
+	// ì—¬ë°± ì£¼ê¸°(ìƒí•˜ì¢Œìš° 2í”½ì…€ì”© ì¶œë ¥ ì˜ì—­ ì¤„ì´ê¸°)
 	RECT rc = tileRC;
 	InflateRect(&rc, -2, -2);
 
-	// DT_CENTER : °¡·Î °¡¿îµ¥ Á¤·Ä, DT_VCENTER : ¼¼·Î °¡¿îµ¥ Á¤·Ä, DT_WORDBREAK : ÁÙ¹Ù²Ş/°³Çà Æ÷ÇÔÇØ¼­ ¿µ¿ª ¾È¿¡ ¿©·¯ ÁÙ·Î ¸¸µé¾î Ã³¸®, 
-	// DT_NOPREFIX : & °°Àº ¹®ÀÚ ´ÜÃàÅ° ¹ØÁÙ·Î ÇØ¼®ÇÏÁö ¾Ê°í ¹Ù·Î Ãâ·Â
+	// DT_CENTER : ê°€ë¡œ ê°€ìš´ë° ì •ë ¬, DT_VCENTER : ì„¸ë¡œ ê°€ìš´ë° ì •ë ¬, DT_WORDBREAK : ì¤„ë°”ê¿ˆ/ê°œí–‰ í¬í•¨í•´ì„œ ì˜ì—­ ì•ˆì— ì—¬ëŸ¬ ì¤„ë¡œ ë§Œë“¤ì–´ ì²˜ë¦¬, 
+	// DT_NOPREFIX : & ê°™ì€ ë¬¸ì ë‹¨ì¶•í‚¤ ë°‘ì¤„ë¡œ í•´ì„í•˜ì§€ ì•Šê³  ë°”ë¡œ ì¶œë ¥
 	DrawTextW(memdc, buf, -1, &rc, DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_NOPREFIX);
 
-	// Å¬¸®ÇÎ ÇØÁ¦ÇÏ¿© ±×¸®±â ÀÛ¾÷ Á¤»óÀ¸·Î ¿øº¹
+	// í´ë¦¬í•‘ í•´ì œí•˜ì—¬ ê·¸ë¦¬ê¸° ì‘ì—… ì •ìƒìœ¼ë¡œ ì›ë³µ
 	RestoreDC(memdc, saved);
 }
 

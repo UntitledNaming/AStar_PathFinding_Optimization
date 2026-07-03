@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <time.h>
 #include <vector>
 #include "Map.h"
@@ -18,7 +18,7 @@ void MapGenerator::init(int width, int height)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			Probability prob = rand() % 101; // Å¸ÀÏ¿¡ ¼³Á¤ÇÒ È®·ü(0 ~ 100 %)
+			Probability prob = rand() % 101; // íƒ€ì¼ì— ì„¤ì •í•  í™•ë¥ (0 ~ 100 %)
 			m_probBoard[y][x] = prob;
 		}
 	}
@@ -42,8 +42,8 @@ void MapGenerator::GenProbWall(Map& map)
 				map.SetWall(Map::TilePos{ x,y });
 			}
 
-			// ·£´ý°ª ¾ò¾î¼­ ÇØ´ç Å¸ÀÏÀÇ È®·ü ¹üÀ§ ¾È¿¡ µé¾î°¡¸é º® »ý¼º
-			int val = rand() % 99 + 1; // 1 ~ 99 Áß ·£´ý°ª »ý¼º
+			// ëžœë¤ê°’ ì–»ì–´ì„œ í•´ë‹¹ íƒ€ì¼ì˜ í™•ë¥  ë²”ìœ„ ì•ˆì— ë“¤ì–´ê°€ë©´ ë²½ ìƒì„±
+			int val = rand() % 99 + 1; // 1 ~ 99 ì¤‘ ëžœë¤ê°’ ìƒì„±
 
 			if (val >= 1 && val <= m_probBoard[y][x])
 			{

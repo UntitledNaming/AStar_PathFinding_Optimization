@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <vector>
 #include <queue>
 #include "resource1.h"
@@ -15,79 +15,79 @@ void FillCombo(HWND hDlg)
 
 }
 
-// WndProc¿¡¼­´Â ÇÔ¼ö Æ÷ÀÎÅÍ¸¸ µî·ÏÇÏÁö¸¸ OS°¡ ¸Å°³ÀÎÀÚ¸¦ Àü´ŞÇØÁÜ.
+// WndProcì—ì„œëŠ” í•¨ìˆ˜ í¬ì¸í„°ë§Œ ë“±ë¡í•˜ì§€ë§Œ OSê°€ ë§¤ê°œì¸ìë¥¼ ì „ë‹¬í•´ì¤Œ.
 INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
 	case WM_INITDIALOG:
 	{
-		// lParamÀ¸·Î Àü´ŞµÈ À©µµ¿ì °´Ã¼ ÇÚµéÀ» ´ÙÀÌ¾ó·Î±×¿¡ ÀúÀåÇÏ±â
+		// lParamìœ¼ë¡œ ì „ë‹¬ëœ ìœˆë„ìš° ê°ì²´ í•¸ë“¤ì„ ë‹¤ì´ì–¼ë¡œê·¸ì— ì €ì¥í•˜ê¸°
 		SetWindowLongPtr(hDlg, DWLP_USER, (LONG_PTR)lParam);
 
-		// ÄŞº¸ ¹Ú½º ÇÚµé ¾ò±â(´ÙÀÌ¾ó·Î±×°¡ ºÎ¸ğ ¿ªÇÒÇÏ°í ´ÙÀÌ¾ó·Î±×¾È¿¡ ÄŞº¸ ¹Ú½º Ã£±â À§ÇØ ¸Å°³ÀÎÀÚ·Î ÄŞº¸ ¹Ú½º IDÀü´Ş)
+		// ì½¤ë³´ ë°•ìŠ¤ í•¸ë“¤ ì–»ê¸°(ë‹¤ì´ì–¼ë¡œê·¸ê°€ ë¶€ëª¨ ì—­í• í•˜ê³  ë‹¤ì´ì–¼ë¡œê·¸ì•ˆì— ì½¤ë³´ ë°•ìŠ¤ ì°¾ê¸° ìœ„í•´ ë§¤ê°œì¸ìë¡œ ì½¤ë³´ ë°•ìŠ¤ IDì „ë‹¬)
 		HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_MODE);
 
-		// Ç×¸ñ Ãß°¡
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)L"¼öµ¿");
-		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)L"ÀÚµ¿");
+		// í•­ëª© ì¶”ê°€
+		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)L"ìˆ˜ë™");
+		SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)L"ìë™");
 
-		// ÄŞº¸ ¹Ú½º 0¹ø Ç×¸ñ °­Á¦ ÁöÁ¤
+		// ì½¤ë³´ ë°•ìŠ¤ 0ë²ˆ í•­ëª© ê°•ì œ ì§€ì •
 		SendMessage(hCombo, CB_SETCURSEL, 0, 0);
 
-		// µå·Ó´Ù¿î ³ôÀÌ È® ´Ã¸®±â (ÇÙ½É)
-		RECT rc{};                         // »ç°¢Çü ÁÂÇ¥ ´ãÀ» ±¸Á¶Ã¼ »ı¼º
-		GetWindowRect(hCombo, &rc);        // ÄŞº¸ ¹Ú½ºÀÇ È­¸é ÁÂÇ¥¸¦ rc¿¡ ÀúÀå
-		int w = rc.right - rc.left;        // ÇöÀç ÄŞº¸ ¹Ú½ºÀÇ °¡·Î¸¦ °è»ê
-		SetWindowPos(hCombo, NULL, 0, 0, w, 200, SWP_NOMOVE | SWP_NOZORDER); // À©µµ¿ìÀÇ À§Ä¡¿Í Å©±â ¼ø¼­¸¦ ¹Ù²Ù´Â API
-		                                                                     // 3, 4¹øÂ° ÀÎÀÚ´Â À©µµ¿ì ÀÌµ¿ ½ÃÅ³ ÁÂÇ¥ÀÎµ¥ ¿ì¼± 0,0À¸·Î ¼±ÅÃ
-		                                                                     // À©µµ¿ìÀÇ Å©±â¸¦ °¡·Î w, ¼¼·Î 200À¸·Î º¯°æ(¼¼·Î¸¸ Å°¿ò)
-		                                                                     // SWP_NOMOVE : À©µµ¿ì À§Ä¡ ÀÌµ¿ÇÏÁö ¸¶¶ó / SWP_NOZORDER : À©µµ¿ì Ã¢ ¼ø¼­ ¹Ù²ÙÁö ¸¶¶ó
+		// ë“œë¡­ë‹¤ìš´ ë†’ì´ í™• ëŠ˜ë¦¬ê¸° (í•µì‹¬)
+		RECT rc{};                         // ì‚¬ê°í˜• ì¢Œí‘œ ë‹´ì„ êµ¬ì¡°ì²´ ìƒì„±
+		GetWindowRect(hCombo, &rc);        // ì½¤ë³´ ë°•ìŠ¤ì˜ í™”ë©´ ì¢Œí‘œë¥¼ rcì— ì €ì¥
+		int w = rc.right - rc.left;        // í˜„ì¬ ì½¤ë³´ ë°•ìŠ¤ì˜ ê°€ë¡œë¥¼ ê³„ì‚°
+		SetWindowPos(hCombo, NULL, 0, 0, w, 200, SWP_NOMOVE | SWP_NOZORDER); // ìœˆë„ìš°ì˜ ìœ„ì¹˜ì™€ í¬ê¸° ìˆœì„œë¥¼ ë°”ê¾¸ëŠ” API
+		                                                                     // 3, 4ë²ˆì§¸ ì¸ìëŠ” ìœˆë„ìš° ì´ë™ ì‹œí‚¬ ì¢Œí‘œì¸ë° ìš°ì„  0,0ìœ¼ë¡œ ì„ íƒ
+		                                                                     // ìœˆë„ìš°ì˜ í¬ê¸°ë¥¼ ê°€ë¡œ w, ì„¸ë¡œ 200ìœ¼ë¡œ ë³€ê²½(ì„¸ë¡œë§Œ í‚¤ì›€)
+		                                                                     // SWP_NOMOVE : ìœˆë„ìš° ìœ„ì¹˜ ì´ë™í•˜ì§€ ë§ˆë¼ / SWP_NOZORDER : ìœˆë„ìš° ì°½ ìˆœì„œ ë°”ê¾¸ì§€ ë§ˆë¼
 		return true;
 	}
 
-	// ´ÙÀÌ¾ó·Î±× ¾È¿¡¼­ »ç¿ëÀÚ°¡ Æ¯Á¤ ¹öÆ° ´©¸§ µî ¾×¼Ç ¹ß»ı½Ã Ã³¸®µÇ´Â ÀÌº¥Æ®
-	// wParam¿¡ ¿©·¯ Á¤º¸µé ¼¯¿© ÀÖÀ½. ÇÏÀ§ 16bit(LOWORD)¿¡´Â ¸Ş´ºID, ¹öÆ° ID, ÄÁÆ®·Ñ ID¸¦ ´ã°í ÀÖÀ½.
+	// ë‹¤ì´ì–¼ë¡œê·¸ ì•ˆì—ì„œ ì‚¬ìš©ìê°€ íŠ¹ì • ë²„íŠ¼ ëˆ„ë¦„ ë“± ì•¡ì…˜ ë°œìƒì‹œ ì²˜ë¦¬ë˜ëŠ” ì´ë²¤íŠ¸
+	// wParamì— ì—¬ëŸ¬ ì •ë³´ë“¤ ì„ì—¬ ìˆìŒ. í•˜ìœ„ 16bit(LOWORD)ì—ëŠ” ë©”ë‰´ID, ë²„íŠ¼ ID, ì»¨íŠ¸ë¡¤ IDë¥¼ ë‹´ê³  ìˆìŒ.
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
 		{
-			// OK ¹öÆ° ´­·ÈÀ» ¶§ Ã³¸®
+			// OK ë²„íŠ¼ ëˆŒë ¸ì„ ë•Œ ì²˜ë¦¬
 		case IDOK:
 		{
-			// ÄŞº¸ ¹Ú½º¿¡¼­ °ª ¾ò±â
-			// ÄŞº¸ ¹Ú½º ÇÚµé ¾ò±â
+			// ì½¤ë³´ ë°•ìŠ¤ì—ì„œ ê°’ ì–»ê¸°
+			// ì½¤ë³´ ë°•ìŠ¤ í•¸ë“¤ ì–»ê¸°
 			HWND hCombo = GetDlgItem(hDlg, IDC_COMBO_MODE);
 
-			// ÄŞº¸ ¹Ú½ºÀÇ Ç×¸ñ ¸®½ºÆ®°¡ ÇöÀç »ç¿ëÀÚ°¡ ¼±ÅÃÇÑ °ÍÀÎÁö ¾ò±â(0¹øÂ° ÀÎµ¦½º ºÎÅÍ ½ÃÀÛ)
+			// ì½¤ë³´ ë°•ìŠ¤ì˜ í•­ëª© ë¦¬ìŠ¤íŠ¸ê°€ í˜„ì¬ ì‚¬ìš©ìê°€ ì„ íƒí•œ ê²ƒì¸ì§€ ì–»ê¸°(0ë²ˆì§¸ ì¸ë±ìŠ¤ ë¶€í„° ì‹œì‘)
 			int sel = (int)SendMessage(hCombo, CB_GETCURSEL, 0, 0);
 
 			if (sel == CB_ERR)
 			{
-				MessageBox(hDlg, L"¸ğµå¸¦ ¼±ÅÃÇÏ¼¼¿ä.", L"°æ°í", MB_ICONWARNING);
+				MessageBox(hDlg, L"ëª¨ë“œë¥¼ ì„ íƒí•˜ì„¸ìš”.", L"ê²½ê³ ", MB_ICONWARNING);
 				return true;
 			}
 
-			// Edit Controller Box¿¡¼­ °ª ¾ò±â
+			// Edit Controller Boxì—ì„œ ê°’ ì–»ê¸°
 			BOOL ok = false;
-			int w = (int)GetDlgItemInt(hDlg, IDC_EDIT_W, &ok, false);   // ¸Å°³ÀÎÀÚ·Î ´ÙÀÌ¾ó·Î±× ÇÚµé, EDIT ÄÁÆ®·Ñ ¹Ú½º ID, º¯È¯ ¼º°ø ¿©ºÎ ¾òÀ» ¾Æ¿ô ÆÄ¶ó¹ÌÅÍ, À½¼ö Çã¿ë/¹ÌÇã¿ë
+			int w = (int)GetDlgItemInt(hDlg, IDC_EDIT_W, &ok, false);   // ë§¤ê°œì¸ìë¡œ ë‹¤ì´ì–¼ë¡œê·¸ í•¸ë“¤, EDIT ì»¨íŠ¸ë¡¤ ë°•ìŠ¤ ID, ë³€í™˜ ì„±ê³µ ì—¬ë¶€ ì–»ì„ ì•„ì›ƒ íŒŒë¼ë¯¸í„°, ìŒìˆ˜ í—ˆìš©/ë¯¸í—ˆìš©
 			if (!ok)
 			{
-				MessageBox(hDlg, L"°¡·Î °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä", L"Error", MB_OK);
+				MessageBox(hDlg, L"ê°€ë¡œ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”", L"Error", MB_OK);
 				return true;
 			}
 
 			int h = (int)GetDlgItemInt(hDlg, IDC_EDIT_H, &ok, false);
 			if (!ok)
 			{
-				MessageBox(hDlg, L"¼¼·Î °ªÀ» ÀÔ·ÂÇÏ¼¼¿ä", L"Error", MB_OK);
+				MessageBox(hDlg, L"ì„¸ë¡œ ê°’ì„ ì…ë ¥í•˜ì„¸ìš”", L"Error", MB_OK);
 				return true;
 			}
 
 			UINT64 count = (int)GetDlgItemInt(hDlg, IDC_EDIT_COUNT, &ok, false);
 			if (!ok)
 			{
-				MessageBox(hDlg, L"Å×½ºÆ® È½¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä", L"Error", MB_OK);
+				MessageBox(hDlg, L"í…ŒìŠ¤íŠ¸ íšŸìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”", L"Error", MB_OK);
 				return true;
 			}
 
@@ -95,7 +95,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			AppController* pController = (AppController*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-			// ÀÎÀÚ Àü´ŞÇÒ setting ±¸Á¶Ã¼ ÃÊ±âÈ­
+			// ì¸ì ì „ë‹¬í•  setting êµ¬ì¡°ì²´ ì´ˆê¸°í™”
 			AppController::settings set;
 
 			if (sel == 0)
@@ -113,7 +113,7 @@ INT_PTR SettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			set.m_count = count;
 			pController->Init(set, hwnd);
 
-			// ´ÙÀÌ¾ó·Î±× Ã¢ ´İ±â
+			// ë‹¤ì´ì–¼ë¡œê·¸ ì°½ ë‹«ê¸°
 			EndDialog(hDlg, IDCANCEL);
 			return true;
 		}
