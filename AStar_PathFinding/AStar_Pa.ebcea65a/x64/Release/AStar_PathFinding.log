@@ -1,8 +1,11 @@
-﻿  AStar_PathFinding.cpp
-  AppController.cpp
+﻿  AppController.cpp
 C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\ProfilerTLS.h(436,10): warning C4244: 'return': 'DWORD'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 'AppController.cpp'을(를) 컴파일하는 중)
   
+  AStar_PathFinding.cpp
+  Map.cpp
+  MapGenerator.cpp
+C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\MapGenerator.cpp(13,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   PathFinder.cpp
 C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\ProfilerTLS.h(436,10): warning C4244: 'return': 'DWORD'에서 'uint16_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 'PathFinder.cpp'을(를) 컴파일하는 중)
@@ -12,8 +15,8 @@ C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\Pa
   Renderer.cpp
   SettingsDialog.cpp
   코드를 생성하고 있습니다.
-  0 of 895 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  8 of 893 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+    2 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   AStar_PathFinding.vcxproj -> C:\Users\sdj53\Documents\GitHub\AStar_PathFinding_BenchMark\AStar_PathFinding\x64\Release\AStar_PathFinding.exe

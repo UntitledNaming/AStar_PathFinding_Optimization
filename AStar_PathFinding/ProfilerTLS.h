@@ -297,8 +297,15 @@ public:
 				//전체 TotalTick에서 Max, Min 뺀 값을 call 횟수로 나눔
 				maxTime = ((((double)ptr[i][j].s_Max[0] + (double)ptr[i][j].s_Max[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
 				minTime = ((((double)ptr[i][j].s_Min[0] + (double)ptr[i][j].s_Min[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
-				avgTime = (((ptr[i][j].s_TotalTime - ptr[i][j].s_Max[0] - ptr[i][j].s_Max[1] - ptr[i][j].s_Min[0] - ptr[i][j].s_Min[1]) / (ptr[i][j].s_CallTime - 4)) * (double)1000000 / freq.QuadPart);
 
+				if (ptr[i][j].s_CallTime > 4)
+				{
+					avgTime = (((ptr[i][j].s_TotalTime - ptr[i][j].s_Max[0] - ptr[i][j].s_Max[1] - ptr[i][j].s_Min[0] - ptr[i][j].s_Min[1]) / (ptr[i][j].s_CallTime - 4)) * (double)1000000 / freq.QuadPart);
+				}
+				else
+				{
+					avgTime = ptr[i][j].s_TotalTime / ptr[i][j].s_CallTime * (double)1000000 / freq.QuadPart;
+				}
 
 
 				ret = StringCchPrintfExW(pEnd, reMain, &pEnd, &reMain, 0,row, threadID, ptr[i][j].s_Name.c_str(), avgTime, minTime, maxTime, (long long)ptr[i][j].s_CallTime);

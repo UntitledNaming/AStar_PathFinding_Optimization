@@ -16,7 +16,7 @@ Renderer::~Renderer()
 	DeleteObject(m_bitMap);
 
 	// 메모리 DC 제거
-	DeleteObject(m_memDC);
+	DeleteDC(m_memDC);
 
 	// 펜, 브러시 제거
 	DeleteObject(m_gridPen);
@@ -189,7 +189,7 @@ void Renderer::RenderBrush(HDC memdc, const Map& map, const PathFinder& pathfind
 
 				Rectangle(memdc, m_offsetX + tx * m_gridSize, m_offsetY + ty * m_gridSize, m_offsetX + (tx + 1) * m_gridSize, m_offsetY + (ty + 1) * m_gridSize);
 
-				SelectObject(memdc, m_nodeBrush);
+				SelectObject(memdc, oldNodeBrush);
 			}
 		}
 	}

@@ -44,12 +44,12 @@ public:
 		return m_height;
 	}
 
-	inline TilePos GetStartPos() const noexcept
+	inline const TilePos& GetStartPos() const noexcept
 	{
 		return m_start;
 	}
 
-	inline TilePos GetGoalPos() const noexcept
+	inline const TilePos& GetGoalPos() const noexcept
 	{
 		return m_goal;
 	}

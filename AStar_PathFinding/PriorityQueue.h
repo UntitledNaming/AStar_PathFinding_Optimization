@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <string.h>
 
 template <typename T>
 struct MinCmp
@@ -23,6 +24,13 @@ template <typename T, typename Compare>
 
 class PriorityQueue
 {
+private:
+	T* m_allocPtr;        // 할당 주소
+	Compare  m_cmp;       // 비교자
+	INT      m_size;      // 배열에 유효한 원소 갯수
+	INT      m_capacity;  // 배열 할당 원소 갯수
+
+
 public:
 	PriorityQueue()
 	{
@@ -167,9 +175,13 @@ public:
 		if (m_capacity >= newCapacity)
 			return false;
 
+		// 새 버퍼 할당
 		T* newptr = new T[newCapacity];
-		m_capacity = newCapacity;
 
+		// copy
+		memcpy_s(newptr, sizeof(T) * m_capacity, m_allocPtr, sizeof(T) * m_capacity);
+
+		m_capacity = newCapacity;
 		if (m_allocPtr)
 			delete[] m_allocPtr;
 
@@ -181,11 +193,4 @@ public:
 	{
 		m_size = 0;
 	}
-
-
-private:
-	T*       m_allocPtr;  // 할당 주소
-	Compare  m_cmp;       // 비교자
-	INT      m_size;      // 배열에 유효한 원소 갯수
-	INT      m_capacity;  // 배열 할당 원소 갯수
 };
