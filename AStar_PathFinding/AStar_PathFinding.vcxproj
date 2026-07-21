@@ -128,11 +128,8 @@
     <ClInclude Include="AppController.h" />
     <ClInclude Include="AStar_PathFinding.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="LFStack.h" />
-    <ClInclude Include="LockFreeMemoryPoolLive.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapGenerator.h" />
-    <ClInclude Include="MemoryPoolTLS.h" />
     <ClInclude Include="PathFinder.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="ProfilerTLS.h" />

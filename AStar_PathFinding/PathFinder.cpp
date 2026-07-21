@@ -81,7 +81,7 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 		}
 
 		// result에 적힌 값이 초기값은 아닌데 그 값보다 현재 노드의 fval이 크면 누가 방문해서 best를 갱신한 상태기 때문에 pass
-		if ((cur.m_fVal >= m_result[cur.m_ypos][cur.m_xpos].m_fVal) && (m_result[cur.m_ypos][cur.m_xpos].m_fVal != -1))
+		if ((cur.m_fVal > m_result[cur.m_ypos][cur.m_xpos].m_fVal) && (m_result[cur.m_ypos][cur.m_xpos].m_fVal != -1))
 			continue;
 
 

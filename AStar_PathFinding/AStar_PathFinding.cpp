@@ -119,7 +119,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         // CreateWindow 시 전달한 pController를 cs의 멤버 변수에서 가져와서 SetWindowLongPtr을 통해 저장
         CREATESTRUCT* cs = (CREATESTRUCT*)lParam;
-        AppController* pController = (AppController*)cs->lpCreateParams;
+        pController = (AppController*)cs->lpCreateParams;
 
         SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pController);
 

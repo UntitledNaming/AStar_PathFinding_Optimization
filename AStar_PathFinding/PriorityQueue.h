@@ -186,6 +186,8 @@ public:
 			delete[] m_allocPtr;
 
 		m_allocPtr = newptr;
+
+		return true;
 	}
 
 	// 기존 메모리 재활용해서 pq 초기화 하는 함수
