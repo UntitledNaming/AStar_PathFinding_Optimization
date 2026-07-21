@@ -1,0 +1,20 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+
+# Build outputs
+x64/
+Debug/
+Release/
+*.obj
+*.pch
+*.ipch
+*.tlog
+*.ilk
+*.pdb
+*.idb
+*.log
+
+# misc
+_to_delete/
