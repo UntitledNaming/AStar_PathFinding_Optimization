@@ -32,8 +32,8 @@ private:
 		std::wstring             s_Name;
 		LARGE_INTEGER            s_StartTick;
 		uint64_t                 s_TotalTime;
-		uint64_t                 s_Min[2];
-		uint64_t                 s_Max[2];
+		uint64_t                 s_Min;
+		uint64_t                 s_Max;
 		uint64_t                 s_CallTime;
 	};
 
@@ -44,8 +44,6 @@ private:
 		PROFILE_MAP_PTR s_TablePtr;
 		DWORD           s_ThreadID;
 	};
-	
-
 
 	struct st_TOTAL_DATA
 	{
@@ -181,11 +179,8 @@ public:
 				ptr[i][j].s_TotalTime = it->second.s_TotalTime;
 				ptr[i][j].s_Name = it->second.s_Name;
 
-				for (int k = 0; k < 2; k++)
-				{
-					ptr[i][j].s_Max[k] = it->second.s_Max[k];
-					ptr[i][j].s_Min[k] = it->second.s_Min[k];
-				}
+				ptr[i][j].s_Max = it->second.s_Max;
+				ptr[i][j].s_Min = it->second.s_Min;
 
 				j++;
 				++it;
@@ -199,7 +194,7 @@ public:
 		//=======================================================================================================
 
 		const WCHAR* line = L"+------------+------------------------------------------+--------------+--------------+--------------+------------+\n";
-		const WCHAR* header = L"| Thread ID  | Name                                     | Avg (us)     | Min (us)     | Max (us)     | Call       |\n";
+		const WCHAR* header = L"| Thread ID  | Name                                     | Avg (us)     | Min (us)     | Max (us)     | Call     |\n";
 		const WCHAR* row = L"| %10u | %-40s | %12.3f | %12.3f | %12.3f | %10lld |\n";
 		const WCHAR* total = L"| %-10s | %-40s | %12.3f | %12.3f | %12.3f | %10lld |\n";
 
@@ -295,12 +290,12 @@ public:
 			for (int j = 0; j < tableSize;j++)
 			{
 				//전체 TotalTick에서 Max, Min 뺀 값을 call 횟수로 나눔
-				maxTime = ((((double)ptr[i][j].s_Max[0] + (double)ptr[i][j].s_Max[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
-				minTime = ((((double)ptr[i][j].s_Min[0] + (double)ptr[i][j].s_Min[1]) * 0.5) * 1000000.0 / (double)freq.QuadPart);
+				maxTime = (double)ptr[i][j].s_Max  * 1000000.0 / (double)freq.QuadPart;
+				minTime = (double)ptr[i][j].s_Min  * 1000000.0 / (double)freq.QuadPart;
 
-				if (ptr[i][j].s_CallTime > 4)
+				if (ptr[i][j].s_CallTime > 2)
 				{
-					avgTime = (((ptr[i][j].s_TotalTime - ptr[i][j].s_Max[0] - ptr[i][j].s_Max[1] - ptr[i][j].s_Min[0] - ptr[i][j].s_Min[1]) / (ptr[i][j].s_CallTime - 4)) * (double)1000000 / freq.QuadPart);
+					avgTime = (((ptr[i][j].s_TotalTime - ptr[i][j].s_Max - ptr[i][j].s_Min) / (ptr[i][j].s_CallTime - 2)) * (double)1000000 / freq.QuadPart);
 				}
 				else
 				{
@@ -462,8 +457,8 @@ private:
 		std::wstring   s_Name;
 		LARGE_INTEGER  s_StartTick;
 		uint64_t       s_TotalTime;
-		uint64_t       s_Min[2];
-		uint64_t       s_Max[2];
+		uint64_t       s_Min;
+		uint64_t       s_Max;
 		uint64_t       s_CallTime;
 	};
 
@@ -517,8 +512,8 @@ public:
 
 			for (int i = 0; i < 2; i++)
 			{
-				m_SampleData.s_Max[i] = 0;
-				m_SampleData.s_Min[i] = ULLONG_MAX;
+				m_SampleData.s_Max = 0;
+				m_SampleData.s_Min = ULLONG_MAX;
 			}
 
 		}
@@ -531,11 +526,8 @@ public:
 			m_SampleData.s_TotalTime = it->second.s_TotalTime;
 			m_SampleData.s_Name = it->second.s_Name;
 
-			for (int i = 0; i < 2; i++)
-			{
-				m_SampleData.s_Max[i] = it->second.s_Max[i];
-				m_SampleData.s_Min[i] = it->second.s_Min[i];
-			}
+			m_SampleData.s_Max = it->second.s_Max;
+			m_SampleData.s_Min = it->second.s_Min;
 		}
 
 
@@ -568,19 +560,15 @@ public:
 		m_SampleData.s_TotalTime += DiffTick;
 
 		//MAX값 갱신
-		if (m_SampleData.s_Max[0] < DiffTick)
+		if (m_SampleData.s_Max < DiffTick)
 		{
-			uint64_t temp = m_SampleData.s_Max[0];
-			m_SampleData.s_Max[0] = DiffTick;
-			m_SampleData.s_Max[1] = temp;
+			m_SampleData.s_Max = DiffTick;
 		}
 
 		//MIN값 갱신
-		if (m_SampleData.s_Min[0] > DiffTick)
+		if (m_SampleData.s_Min > DiffTick)
 		{
-			uint64_t temp = m_SampleData.s_Min[0];
-			m_SampleData.s_Min[0] = DiffTick;
-			m_SampleData.s_Min[1] = temp;
+			m_SampleData.s_Min = DiffTick;
 		}
 
 		//호출량 증가
@@ -607,17 +595,5 @@ public:
 		it->second = m_SampleData;
 		return;
 	}
-
-	/////////////////////////////////////////////////////////////////////////////
-    // 프로파일링 된 데이터를 모두 초기화 한다.
-    // 
-    // Parameters: 없음.
-    // Return: 없음.
-    /////////////////////////////////////////////////////////////////////////////
-	void ProfileReset()
-	{
-
-	}
-
 };
 
