@@ -331,8 +331,6 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 		// 길찾기 실패하면 다시 맵 초기화 해서 벽과 시작점, 도착점 세팅하기
 		if (!m_pathfinder.PathFinding(sxpos, sypos, gxpos, gypos, m_map, true))
 			continue;
-		
-
 
 		break;
 	}
@@ -341,8 +339,20 @@ void AppController::OnAutoPathFinding(HWND hwnd)
 	m_testCnt--;
 	if (m_testCnt == 0)
 	{
+		// 유클리드, 옥타일 확장 노드 갯수 파일명에 저장
+		std::wstring filename = L"PathFinding_";
+		
+		m_pathfinder.m_euclid.totalCount -= m_pathfinder.m_euclid.maxCount;
+		m_pathfinder.m_euclid.totalCount -= m_pathfinder.m_euclid.minCount;
+		
+		m_pathfinder.m_octile.totalCount -= m_pathfinder.m_octile.maxCount;
+		m_pathfinder.m_octile.totalCount -= m_pathfinder.m_octile.minCount;
+
+		filename = filename + L"Euclid " + std::to_wstring(m_pathfinder.m_euclid.totalCount) + L"_";
+		filename = filename + L"Octile " + std::to_wstring(m_pathfinder.m_octile.totalCount);
+
 		// 테스트 횟수 끝나면 파일 저장 후 프로세스 종료
-		CProfilerManager::GetInstance()->ProfileDataOutText(const_cast<WCHAR*>(L"PathFinding"));
+		CProfilerManager::GetInstance()->ProfileDataOutText(const_cast<WCHAR*>(filename.c_str()));
 		PostQuitMessage(0);
 		return;
 	}

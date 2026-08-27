@@ -98,6 +98,9 @@ public:
 			return;
 		}
 
+		else if (m_size == 0)
+			return;
+
 		while (true)
 		{
 			// 자식 찾기

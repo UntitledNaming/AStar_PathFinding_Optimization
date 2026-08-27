@@ -47,56 +47,129 @@ bool PathFinder::PathFinding(int sXpos, int sYpos, int gXpos, int gYpos, const M
 			return false;
 	}
 
-	CProfiler profiler(L"PathFinding");
+	int visitcount1 = 0;
 
-	Node start{ 0 };
-	int dx = abs(sXpos - gXpos);
-	int dy = abs(sYpos - gYpos);
-
-	start.m_xpos = sXpos;
-	start.m_ypos = sYpos;
-	start.m_fVal = 1 * (dx + dy) + (1.5 - 2 * 1) * min(dx, dy);
-	start.m_gVal = 0;
-
-	m_result[sYpos][sXpos].m_pXpos = sXpos;
-	m_result[sYpos][sXpos].m_pYpos = sYpos;
-
-	m_openlist.push(start);
-
-	while (true)
 	{
-		// 목적지 확인안된 상태에서 더 이상 노드를 방문해서 정점 발견할수 없는 경우 false 리턴
-		if (m_openlist.empty())
-			return false;
+		CProfiler profiler(L"PathFinding_Octile");
 
-		Node cur = m_openlist.top();
-		m_openlist.pop();
+		Node start{ 0 };
+		int dx = abs(sXpos - gXpos);
+		int dy = abs(sYpos - gYpos);
 
+		start.m_xpos = sXpos;
+		start.m_ypos = sYpos;
+		start.m_fVal = 1 * (dx + dy) + (1.5 - 2 * 1) * min(dx, dy);
+		start.m_gVal = 0;
 
-		if (cur.m_xpos == gXpos && cur.m_ypos == gYpos)
+		m_result[sYpos][sXpos].m_pXpos = sXpos;
+		m_result[sYpos][sXpos].m_pYpos = sYpos;
+
+		m_openlist.push(start);
+
+		while (true)
 		{
-			// closelist에 목적지 넣기
+			// 목적지 확인안된 상태에서 더 이상 노드를 방문해서 정점 발견할수 없는 경우 
+			if (m_openlist.empty())
+				__debugbreak();
+
+			Node cur = m_openlist.top();
+			m_openlist.pop();
+
+
+			if (cur.m_xpos == gXpos && cur.m_ypos == gYpos)
+			{
+				// closelist에 목적지 넣기
+				m_result[cur.m_ypos][cur.m_xpos].m_close = true;
+				break;
+			}
+
+			// result에 적힌 값이 초기값은 아닌데 그 값보다 현재 노드의 fval이 크면 누가 방문해서 best를 갱신한 상태기 때문에 pass
+			if ((cur.m_fVal > m_result[cur.m_ypos][cur.m_xpos].m_fVal) && (m_result[cur.m_ypos][cur.m_xpos].m_fVal != -1))
+				continue;
+
+
+			// 정점 방문
 			m_result[cur.m_ypos][cur.m_xpos].m_close = true;
-			break;
+			visitcount1++;
+
+			// 정점 주위 8방향 탐색
+			for (int i = 0; i < 8; i++)
+			{
+				Search((Dir)i, cur.m_xpos, cur.m_ypos, gXpos, gYpos, cur.m_fVal, cur.m_gVal, map);
+			}
+
 		}
+	}
 
-		// result에 적힌 값이 초기값은 아닌데 그 값보다 현재 노드의 fval이 크면 누가 방문해서 best를 갱신한 상태기 때문에 pass
-		if ((cur.m_fVal > m_result[cur.m_ypos][cur.m_xpos].m_fVal) && (m_result[cur.m_ypos][cur.m_xpos].m_fVal != -1))
-			continue;
+	m_octile.totalCount += visitcount1;
+	if (m_octile.maxCount < visitcount1)
+		m_octile.maxCount = visitcount1;
+	if (m_octile.minCount > visitcount1)
+		m_octile.minCount = visitcount1;
 
+	m_pathFlag = true;
 
-		// 정점 방문
-		m_result[cur.m_ypos][cur.m_xpos].m_close = true;
+	PathClear();
 
-		// 정점 주위 8방향 탐색
-		for (int i = 0; i < 8; i++)
+	int visitcount2 = 0;
+	{
+		CProfiler profiler(L"PathFinding_Euclid");
+
+		Node start{ 0 };
+		int dx = abs(sXpos - gXpos);
+		int dy = abs(sYpos - gYpos);
+
+		start.m_xpos = sXpos;
+		start.m_ypos = sYpos;
+		start.m_fVal = sqrt(dx * dx + dy * dy);
+		start.m_gVal = 0;
+
+		m_result[sYpos][sXpos].m_pXpos = sXpos;
+		m_result[sYpos][sXpos].m_pYpos = sYpos;
+
+		m_openlist.push(start);
+
+		while (true)
 		{
-			Search((Dir)i, cur.m_xpos, cur.m_ypos, gXpos, gYpos, cur.m_fVal, cur.m_gVal, map);
-		}
+			// 목적지 확인안된 상태에서 더 이상 노드를 방문해서 정점 발견할수 없는 경우 
+			if (m_openlist.empty())
+				__debugbreak();
 
+			Node cur = m_openlist.top();
+			m_openlist.pop();
+
+
+			if (cur.m_xpos == gXpos && cur.m_ypos == gYpos)
+			{
+				// closelist에 목적지 넣기
+				m_result[cur.m_ypos][cur.m_xpos].m_close = true;
+				break;
+			}
+
+			// result에 적힌 값이 초기값은 아닌데 그 값보다 현재 노드의 fval이 크면 누가 방문해서 best를 갱신한 상태기 때문에 pass
+			if ((cur.m_fVal > m_result[cur.m_ypos][cur.m_xpos].m_fVal) && (m_result[cur.m_ypos][cur.m_xpos].m_fVal != -1))
+				continue;
+
+
+			// 정점 방문
+			m_result[cur.m_ypos][cur.m_xpos].m_close = true;
+			visitcount2++;
+
+			// 정점 주위 8방향 탐색
+			for (int i = 0; i < 8; i++)
+			{
+				Search2((Dir)i, cur.m_xpos, cur.m_ypos, gXpos, gYpos, cur.m_fVal, cur.m_gVal, map);
+			}
+
+		}
 	}
 
 	m_pathFlag = true;
+	m_euclid.totalCount += visitcount2;
+	if (m_euclid.maxCount < visitcount2)
+		m_euclid.maxCount = visitcount2;
+	if (m_euclid.minCount > visitcount2)
+		m_euclid.minCount = visitcount2;
 
 	return true;
 }
@@ -107,10 +180,8 @@ void PathFinder::PathClear()
 	if (!m_pathFlag)
 		return;
 
-	CProfiler profiler(L"PathClear");
 	m_pathFlag = false;
 
-	
 	m_openlist.clear();
 
 	for (int y = 0; y < m_height; y++)
@@ -182,6 +253,62 @@ void PathFinder::Search(Dir dir, int xpos, int ypos, int gxpos, int gypos, float
 	next.m_ypos = y;
 	m_openlist.push(next);
 
+}
+
+void PathFinder::Search2(Dir dir, int xpos, int ypos, int gxpos, int gypos, float fVal, float gVal, const Map& map)
+{
+	int x{ 0 };
+	int y{ 0 };
+	float newG = 0;
+	float h = 0;
+	int   dx = 0;
+	int   dy = 0;
+
+	// 초기화 작업 제거 위해 static으로 선언 
+	static int   dir_x2[8] = { 0,0,1,-1,-1,1,1,-1 };
+	static int   dir_y2[8] = { -1,1,0,0,-1,-1,1,1 };
+	static float cost[8] = { 1,1,1,1,1.5,1.5,1.5,1.5 };
+
+	x = xpos + dir_x2[(int)dir];
+	y = ypos + dir_y2[(int)dir];
+
+	// 범위 체크
+	if (x < 0 || x >= m_width || y < 0 || y >= m_height)
+		return;
+
+	// 해당 좌표에 벽 있는지 체크
+	if (map.GetTilePosType(x, y) == Map::TileType::Wall)
+		return;
+
+	// 이미 pq에서 뽑혀서 확정된 노드면 굳이 openlist에 넣을 필요없음. 최소의 F가 이미 나온 상태임.
+	if (m_result[y][x].m_close)
+		return;
+
+	// g 계산
+	newG = gVal + cost[(int)dir];
+
+	// 처음 본 좌표도 아닌데 계산한 gVal이 기존 gVal보다 이상이면 굳이 OpenList에 넣지 않고 리턴
+	if (newG >= m_result[y][x].m_gVal && m_result[y][x].m_gVal != -1)
+		return;
+
+	// h 계산
+	dx = abs(x - gxpos);
+	dy = abs(y - gypos);
+	h = sqrt(dx * dx + dy * dy);
+
+
+	m_result[y][x].m_gVal = newG;
+	m_result[y][x].m_hVal = h;
+	m_result[y][x].m_fVal = newG + h;
+	m_result[y][x].m_pXpos = xpos;
+	m_result[y][x].m_pYpos = ypos;
+
+	Node next{ 0 };
+	next.m_gVal = newG;
+	next.m_fVal = newG + h;
+	next.m_xpos = x;
+	next.m_ypos = y;
+	m_openlist.push(next);
 }
 
 void PathFinder::Search(Dir dir, int xpos, int ypos, const Map& map, std::queue<std::pair<int,int>>& que, std::vector<std::vector<bool>>& search)

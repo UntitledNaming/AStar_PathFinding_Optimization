@@ -13,6 +13,13 @@ public:
 
 	}typedef Tile;
 
+	struct Result
+	{
+		int totalCount = 0;
+		int maxCount   = 0;
+		int minCount   = INT_MAX;
+	};
+
 	struct st_Node
 	{
 		int    m_xpos;
@@ -64,6 +71,7 @@ public:
 
 private:
 	void Search(Dir dir, int xpos, int ypos, int gxpos, int gypos, float fVal, float gVal, const Map& map);
+	void Search2(Dir dir, int xpos, int ypos, int gxpos, int gypos, float fVal, float gVal, const Map& map);
 	void Search(Dir dir, int xpos, int ypos,  const Map& map , std::queue<std::pair<int, int>>& que, std::vector<std::vector<bool>>& search);
 	bool ValidateGoal(int sxpos, int sypos, int gxpos, int gypos, const Map& map);                    // 목적지 좌표로 길찾기가 가능한지 BFS로 선행 체크하는 함수
 
@@ -74,5 +82,9 @@ private:
 
 	PriorityQueue<Node,MinCmp<Node>>                                      m_openlist;
 	Tile**                                                                m_result;
+
+public:
+	Result                                                                m_euclid;
+	Result                                                                m_octile;
 };
 
